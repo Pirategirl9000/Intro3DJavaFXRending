@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import javafx.scene.shape.*;
 import javafx.scene.paint.Color;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class Main extends Application {
     public static void main(String[] args) {
@@ -19,6 +20,16 @@ public class Main extends Application {
         node.setTranslateX(x);
         node.setTranslateY(y);
         node.setTranslateZ(z);
+    }
+
+    /**
+     * Returns a length 2 array with the x and z velocity of motion, allows the camera to move in the direction it faces
+     * @return double[2] with the x, z velocities
+     */
+    public double[] getMotionVector(double magnitude, double angle) {
+        angle = Math.toRadians(angle);
+        return new double[] {magnitude * Math.sin(angle), magnitude * Math.cos(angle)};
+
     }
 
     @Override
@@ -65,7 +76,9 @@ public class Main extends Application {
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case W:
-                    cameraVelocity[2] = SPEED;
+                    double[] velocity = getMotionVector(SPEED, xTilt.getAngle());
+                    cameraVelocity[0] = velocity[0];
+                    cameraVelocity[2] = velocity[1];
                     break;
                 case S:
                     cameraVelocity[2] = -SPEED;
@@ -103,6 +116,7 @@ public class Main extends Application {
                 case W:
                 case S:
                     cameraVelocity[2] = 0;
+                    cameraVelocity[0] = 0;
                     break;
                 case A:
                 case D:
