@@ -10,7 +10,7 @@ import javafx.scene.shape.*;
 import javafx.scene.paint.Color;
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class Main extends Application {
     public static void main(String[] args) {
         launch();
     }
