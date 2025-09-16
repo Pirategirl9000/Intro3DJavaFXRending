@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 import javafx.scene.shape.*;
 import javafx.scene.paint.Color;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
