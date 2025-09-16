@@ -95,6 +95,10 @@ public class Main extends Application {
         final double SPEED = 0.5;
         final double LOOKSPEED = 0.5;
 
+        // Why the hashmap?
+        // Through my testing this seems to be one of the fastest ways for adding and removing based on the value
+        // I tested vectors, arrays, and hashmaps and hashmaps stood out as the best option
+        // So although we never wind up using the value of the hash key it still appears more effective in terms of popping by value
         final Map<String, Boolean> keysHeld = new HashMap<>();
 
         scene.setOnKeyPressed(e -> keysHeld.put(e.getCode().getName(), true));
