@@ -22,27 +22,46 @@ public class Main extends Application {
         node.setTranslateZ(z);
     }
 
-    /**
-     * Returns a length 2 array with the x and z velocity of motion, allows the camera to move in the direction it faces
-     * @return double[2] with the x, z velocities
-     */
-    public double[] getMotionVector(double magnitude, double angle) {
+    public double[] getMotionVector(double angle) {
         angle = Math.toRadians(angle);
-        return new double[] {magnitude * Math.sin(angle), magnitude * Math.cos(angle)};
-
+        return new double[] {Math.sin(angle), Math.cos(angle)};
     }
 
     @Override
     public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("3D Rendering");
 
-        // Create the box
-        Box box = new Box(40, 40, 40);
-        PhongMaterial material = new PhongMaterial();
-        material.setDiffuseColor(Color.LIGHTPINK);
-        box.setMaterial(material);
-        setTranslate(box, 0, 0, 0);
 
+        // Create the materials for the flag
+        PhongMaterial pinkBanner = new PhongMaterial();
+        PhongMaterial blueBanner = new PhongMaterial();
+        PhongMaterial whiteBanner = new PhongMaterial();
+
+        pinkBanner.setDiffuseColor(Color.LIGHTPINK);
+        blueBanner.setDiffuseColor(Color.LIGHTBLUE);
+        whiteBanner.setDiffuseColor(Color.WHITE);
+
+
+        // Create the boxes used for the banner
+        Box[] boxes = new Box[] {
+                new Box(100, 20, 40),
+                new Box(100, 20, 40),
+                new Box(100, 20, 40),
+                new Box(100, 20, 40),
+                new Box(100, 20, 40),
+        };
+
+        // set the trans flag color
+        boxes[0].setMaterial(blueBanner);
+        boxes[1].setMaterial(pinkBanner);
+        boxes[2].setMaterial(whiteBanner);
+        boxes[3].setMaterial(pinkBanner);
+        boxes[4].setMaterial(blueBanner);
+
+        // Offset each segment of the banner in a manner where white is at 0, 0, 0
+        for (int i = -2; i < boxes.length - 2; i++) {
+            setTranslate(boxes[i + 2], 0, 20 * i, 0);
+        }
 
 
 
@@ -59,13 +78,14 @@ public class Main extends Application {
 
 
         Group root = new Group();
-        root.getChildren().add(box);
+        root.getChildren().addAll(boxes);
         root.getChildren().add(new AmbientLight(Color.WHITE));
 
 
 
         // Set up scene
         Scene scene = new Scene(root, 600, 600, true);
+        scene.setFill(Color.BLACK);
         scene.setCamera(camera);
 
         final double[] cameraVelocity =     {0, 0, 0};  // x, y, z move velocity
@@ -76,9 +96,9 @@ public class Main extends Application {
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case W:
-                    double[] velocity = getMotionVector(SPEED, xTilt.getAngle());
-                    cameraVelocity[0] = velocity[0];
-                    cameraVelocity[2] = velocity[1];
+                    double[] velocity = getMotionVector(xTilt.getAngle());
+                    cameraVelocity[0] = SPEED * velocity[0];
+                    cameraVelocity[2] = SPEED * velocity[1];
                     break;
                 case S:
                     cameraVelocity[2] = -SPEED;
@@ -107,9 +127,10 @@ public class Main extends Application {
                 case RIGHT:
                     cameraTiltVelocity[0] = LOOKSPEED;
                     break;
-
             }
         });
+
+
 
         scene.setOnKeyReleased(e -> {
             switch (e.getCode()) {
