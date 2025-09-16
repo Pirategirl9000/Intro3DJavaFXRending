@@ -10,6 +10,8 @@ import javafx.scene.shape.*;
 import javafx.scene.paint.Color;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main extends Application {
     public static void main(String[] args) {
@@ -93,74 +95,70 @@ public class Main extends Application {
         final double SPEED = 0.5;
         final double LOOKSPEED = 0.5;
 
-        scene.setOnKeyPressed(e -> {
-            switch (e.getCode()) {
-                case W:
-                    double[] velocity = getMotionVector(xTilt.getAngle());
-                    cameraVelocity[0] = SPEED * velocity[0];
-                    cameraVelocity[2] = SPEED * velocity[1];
-                    break;
-                case S:
-                    cameraVelocity[2] = -SPEED;
-                    break;
-                case A:
-                    cameraVelocity[0] = -SPEED;
-                    break;
-                case D:
-                    cameraVelocity[0] = SPEED;
-                    break;
-                case SHIFT:
-                    cameraVelocity[1] = SPEED;
-                    break;
-                case SPACE:
-                    cameraVelocity[1] = -SPEED;
-                    break;
-                case UP:
-                    cameraTiltVelocity[1] = LOOKSPEED;
-                    break;
-                case DOWN:
-                    cameraTiltVelocity[1] = -LOOKSPEED;
-                    break;
-                case LEFT:
-                    cameraTiltVelocity[0] = -LOOKSPEED;
-                    break;
-                case RIGHT:
-                    cameraTiltVelocity[0] = LOOKSPEED;
-                    break;
-            }
-        });
+        final Map<String, Boolean> keysHeld = new HashMap<>();
 
-
-
-        scene.setOnKeyReleased(e -> {
-            switch (e.getCode()) {
-                case W:
-                case S:
-                    cameraVelocity[2] = 0;
-                    cameraVelocity[0] = 0;
-                    break;
-                case A:
-                case D:
-                    cameraVelocity[0] = 0;
-                    break;
-                case SHIFT:
-                case SPACE:
-                    cameraVelocity[1] = 0;
-                    break;
-                case UP:
-                case DOWN:
-                    cameraTiltVelocity[1] = 0;
-                    break;
-                case LEFT:
-                case RIGHT:
-                    cameraTiltVelocity[0] = 0;
-                    break;
-
-            }
-        });
+        scene.setOnKeyPressed(e -> keysHeld.put(e.getCode().getName(), true));
+        scene.setOnKeyReleased(e -> keysHeld.remove(e.getCode().getName()));
 
         new AnimationTimer() {
             public void handle(long now) {
+                // Reset the values through index assignment since the arrays are final
+                cameraVelocity[0] = 0;
+                cameraVelocity[1] = 0;
+                cameraVelocity[2] = 0;
+                cameraTiltVelocity[0] = 0;
+                cameraTiltVelocity[1] = 0;
+                cameraTiltVelocity[2] = 0;
+
+
+                // Calculate our motionVectors for x and z axial movement
+                double[] zMotionVector = getMotionVector(xTilt.getAngle());
+                double[] xMotionVector = getMotionVector(xTilt.getAngle() + 90);
+
+                // Handle the different key presses here
+                // We do it this way so there is dynamic movement where you can turn the camera and move at the same time
+                for (String key : keysHeld.keySet()) {
+                    switch (key) {
+                        // Camera Controls
+                        case "Up":
+                            cameraTiltVelocity[1] = LOOKSPEED;
+                            break;
+                        case "Down":
+                            cameraTiltVelocity[1] = -LOOKSPEED;
+                            break;
+                        case "Left":
+                            cameraTiltVelocity[0] = -LOOKSPEED;
+                            break;
+                        case "Right":
+                            cameraTiltVelocity[0] = LOOKSPEED;
+                            break;
+
+                        // Movement Controls
+                        case "W":
+                            cameraVelocity[0] = zMotionVector[0] * SPEED;
+                            cameraVelocity[2] = zMotionVector[1] * SPEED;
+                            break;
+                        case "S":
+                            cameraVelocity[0] = zMotionVector[0] * -SPEED;
+                            cameraVelocity[2] = zMotionVector[1] * -SPEED;
+                            break;
+                        case "A":
+                            cameraVelocity[0] = xMotionVector[0] * -SPEED;
+                            cameraVelocity[2] = xMotionVector[1] * -SPEED;
+                            break;
+                        case "D":
+                            cameraVelocity[0] = xMotionVector[0] * SPEED;
+                            cameraVelocity[2] = xMotionVector[1] * SPEED;
+                            break;
+                        case "Space":
+                            cameraVelocity[1] = -SPEED;
+                            break;
+                        case "Shift":
+                            cameraVelocity[1] = SPEED;
+                            break;
+                    }
+                }
+
                 camera.setTranslateX(camera.getTranslateX() + cameraVelocity[0]);
                 camera.setTranslateY(camera.getTranslateY() + cameraVelocity[1]);
                 camera.setTranslateZ(camera.getTranslateZ() + cameraVelocity[2]);
