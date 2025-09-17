@@ -2,67 +2,108 @@ package org.example.fx_3d;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.scene.*;
+import javafx.scene.Node;
+import javafx.scene.PerspectiveCamera;
+import javafx.scene.Group;
+import javafx.scene.AmbientLight;
+import javafx.scene.Scene;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-import javafx.scene.shape.*;
+import javafx.scene.shape.Box;
 import javafx.scene.paint.Color;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Main extends Application {
+    /**
+     * Driver code for the program
+     * @param args NULL
+     */
     public static void main(String[] args) {
         launch();
     }
 
+    /**
+     * Sets the translation of a node
+     * @param node the node to translate
+     * @param x x position of the node
+     * @param y y position of the node
+     * @param z z position of the node
+     */
     public void setTranslate(Node node, double x, double y, double z) {
         node.setTranslateX(x);
         node.setTranslateY(y);
         node.setTranslateZ(z);
     }
 
+
+    /**
+     * Returns a vector of motion < cos(angle), sin(angle) >
+     * <p>
+     * This is used to determine the movement on two separate axis based on the angle of the camera allowing forward movement to take you in the direction of view
+     * <p>
+     * For x and z motion use the camera's xTilt and for z-movement use the return[0] and return[1] for x-movement
+     * <p>
+     * For x and y motion use the camera's yTilt and then use return[0] for x and return[1] for y
+     * @param angle the angle of tilt/inclination
+     * @return vector of motion for magnitude = 1
+     */
     public double[] getMotionVector(double angle) {
         angle = Math.toRadians(angle);
-        return new double[] {Math.sin(angle), Math.cos(angle)};
+        return new double[] {Math.cos(angle), Math.sin(angle)};
     }
 
-    @Override
-    public void start(Stage primaryStage) throws IOException {
-        primaryStage.setTitle("3D Rendering");
 
-
-        // Create the materials for the flag
-        PhongMaterial pinkBanner = new PhongMaterial();
-        PhongMaterial blueBanner = new PhongMaterial();
-        PhongMaterial whiteBanner = new PhongMaterial();
+    /**
+     * Creates a trans flag centered on a certain point
+     * @param width width of the flag
+     * @param height height of the flag
+     * @param depth depth of the flag
+     * @param x x position to center it on
+     * @param y y position to center it on
+     * @param z z position to center it on
+     * @return an array of Boxes that make up the flag
+     */
+    public Box[] makeTransFlag(int width, int height, int depth, int x, int y, int z) {
+        final PhongMaterial pinkBanner = new PhongMaterial();
+        final PhongMaterial blueBanner = new PhongMaterial();
+        final PhongMaterial whiteBanner = new PhongMaterial();
 
         pinkBanner.setDiffuseColor(Color.LIGHTPINK);
         blueBanner.setDiffuseColor(Color.LIGHTBLUE);
         whiteBanner.setDiffuseColor(Color.WHITE);
 
-
-        // Create the boxes used for the banner
         Box[] boxes = new Box[] {
-                new Box(100, 20, 40),
-                new Box(100, 20, 40),
-                new Box(100, 20, 40),
-                new Box(100, 20, 40),
-                new Box(100, 20, 40),
+                new Box(width, height, depth),
+                new Box(width, height, depth),
+                new Box(width, height, depth),
+                new Box(width, height, depth),
+                new Box(width, height, depth),
         };
 
-        // set the trans flag color
         boxes[0].setMaterial(blueBanner);
         boxes[1].setMaterial(pinkBanner);
         boxes[2].setMaterial(whiteBanner);
         boxes[3].setMaterial(pinkBanner);
         boxes[4].setMaterial(blueBanner);
 
-        // Offset each segment of the banner in a manner where white is at 0, 0, 0
         for (int i = -2; i < boxes.length - 2; i++) {
-            setTranslate(boxes[i + 2], 0, 20 * i, 0);
+            setTranslate(boxes[i + 2], x, y + height * i, 0);
         }
+
+        return boxes;
+    }
+
+    /**
+     * Start point for the application
+     * @param primaryStage stage to display content on
+     * @throws IOException If error occurs during rendering
+     */
+    @Override
+    public void start(Stage primaryStage) throws IOException {
+        primaryStage.setTitle("3D Rendering");
 
 
 
@@ -74,18 +115,20 @@ public class Main extends Application {
         camera.setFarClip(1000);
         camera.getTransforms().addAll(xTilt, yTilt);
 
+        Box[] transflag = makeTransFlag(100, 20, 100, 0, 0, 0);
+
 
 
 
 
         Group root = new Group();
-        root.getChildren().addAll(boxes);
+        root.getChildren().addAll(transflag);
         root.getChildren().add(new AmbientLight(Color.WHITE));
 
 
 
         // Set up scene
-        Scene scene = new Scene(root, 600, 600, true);
+        Scene scene = new Scene(root, 1920, 1080, true);
         scene.setFill(Color.BLACK);
         scene.setCamera(camera);
 
@@ -96,14 +139,14 @@ public class Main extends Application {
 
         // Why the hashmap?
         // Through my testing this seems to be one of the fastest ways for adding and removing based on the value
-        // I tested vectors, arrays, and hashmaps and hashmaps stood out as the best option
+        // I tested arraylists, vectors, arrays, and hashmaps and hashmaps stood out as the best option
         // So although we never wind up using the value of the hash key it still appears more effective in terms of popping by value
         final Map<String, Boolean> keysHeld = new HashMap<>();
 
         scene.setOnKeyPressed(e -> keysHeld.put(e.getCode().getName(), true));
         scene.setOnKeyReleased(e -> keysHeld.remove(e.getCode().getName()));
 
-        new AnimationTimer() {
+        AnimationTimer gameLoop = new AnimationTimer() {
             public void handle(long now) {
                 // Reset the values through index assignment since the arrays are final
                 cameraVelocity[0] = 0;
@@ -138,20 +181,20 @@ public class Main extends Application {
 
                         // Movement Controls
                         case "W":
-                            cameraVelocity[0] = zMotionVector[0] * SPEED;
-                            cameraVelocity[2] = zMotionVector[1] * SPEED;
+                            cameraVelocity[0] = zMotionVector[1] * SPEED;
+                            cameraVelocity[2] = zMotionVector[0] * SPEED;
                             break;
                         case "S":
-                            cameraVelocity[0] = zMotionVector[0] * -SPEED;
-                            cameraVelocity[2] = zMotionVector[1] * -SPEED;
+                            cameraVelocity[0] = zMotionVector[1] * -SPEED;
+                            cameraVelocity[2] = zMotionVector[0] * -SPEED;
                             break;
                         case "A":
-                            cameraVelocity[0] = xMotionVector[0] * -SPEED;
-                            cameraVelocity[2] = xMotionVector[1] * -SPEED;
+                            cameraVelocity[0] = xMotionVector[1] * -SPEED;
+                            cameraVelocity[2] = xMotionVector[0] * -SPEED;
                             break;
                         case "D":
-                            cameraVelocity[0] = xMotionVector[0] * SPEED;
-                            cameraVelocity[2] = xMotionVector[1] * SPEED;
+                            cameraVelocity[0] = xMotionVector[1] * SPEED;
+                            cameraVelocity[2] = xMotionVector[0] * SPEED;
                             break;
                         case "Space":
                             cameraVelocity[1] = -SPEED;
@@ -180,7 +223,9 @@ public class Main extends Application {
                 xTilt.setAngle(newXTilt);
                 yTilt.setAngle(newYTilt);
             }
-        }.start();
+        };
+
+        gameLoop.start();
 
         primaryStage.setScene(scene);
         primaryStage.show();
