@@ -22,12 +22,12 @@ public class Player extends Group {
     /**
      * Current speed at which our camera is tilting, this value is used when updating the angle of the camera (x, y, z)
      */
-    private final double[] cameraTiltVelocity = {0, 0, 0};
+    private final double[] turnVelocity = {0, 0, 0};
 
     /**
      * Current speed at which our camera is moving, this value is determined by the lateral angle of the camera (xTilt) and is multiplied by the SPEED
      */
-    private final double[] cameraVelocity = {0, 0, 0};  // x, y, z move velocity
+    private final double[] velocity = {0, 0, 0};  // x, y, z move velocity
 
     /**
      * The xTilt transformer of the camera
@@ -106,12 +106,12 @@ public class Player extends Group {
 
     public void move(Map<String, Boolean> keysHeld) {
         // Reset the values through index assignment since the arrays are final
-        cameraVelocity[0] = 0;
-        cameraVelocity[1] = 0;
-        cameraVelocity[2] = 0;
-        cameraTiltVelocity[0] = 0;
-        cameraTiltVelocity[1] = 0;
-        cameraTiltVelocity[2] = 0;
+        velocity[0] = 0;
+        velocity[1] = 0;
+        velocity[2] = 0;
+        turnVelocity[0] = 0;
+        turnVelocity[1] = 0;
+        turnVelocity[2] = 0;
 
 
         // Calculate our motionVectors for x and z axial movement
@@ -124,51 +124,51 @@ public class Player extends Group {
             switch (key) {
                 // Camera Controls
                 case "Up":
-                    cameraTiltVelocity[1] = LOOKSPEED;
+                    turnVelocity[1] = LOOKSPEED;
                     break;
                 case "Down":
-                    cameraTiltVelocity[1] = -LOOKSPEED;
+                    turnVelocity[1] = -LOOKSPEED;
                     break;
                 case "Left":
-                    cameraTiltVelocity[0] = -LOOKSPEED;
+                    turnVelocity[0] = -LOOKSPEED;
                     break;
                 case "Right":
-                    cameraTiltVelocity[0] = LOOKSPEED;
+                    turnVelocity[0] = LOOKSPEED;
                     break;
 
                 // Movement Controls
                 case "W":
-                    cameraVelocity[0] = zMotionVector[1] * SPEED;
-                    cameraVelocity[2] = zMotionVector[0] * SPEED;
+                    velocity[0] = zMotionVector[1] * SPEED;
+                    velocity[2] = zMotionVector[0] * SPEED;
                     break;
                 case "S":
-                    cameraVelocity[0] = zMotionVector[1] * -SPEED;
-                    cameraVelocity[2] = zMotionVector[0] * -SPEED;
+                    velocity[0] = zMotionVector[1] * -SPEED;
+                    velocity[2] = zMotionVector[0] * -SPEED;
                     break;
                 case "A":
-                    cameraVelocity[0] = xMotionVector[1] * -SPEED;
-                    cameraVelocity[2] = xMotionVector[0] * -SPEED;
+                    velocity[0] = xMotionVector[1] * -SPEED;
+                    velocity[2] = xMotionVector[0] * -SPEED;
                     break;
                 case "D":
-                    cameraVelocity[0] = xMotionVector[1] * SPEED;
-                    cameraVelocity[2] = xMotionVector[0] * SPEED;
+                    velocity[0] = xMotionVector[1] * SPEED;
+                    velocity[2] = xMotionVector[0] * SPEED;
                     break;
                 case "Space":
-                    cameraVelocity[1] = -SPEED;
+                    velocity[1] = -SPEED;
                     break;
                 case "Shift":
-                    cameraVelocity[1] = SPEED;
+                    velocity[1] = SPEED;
                     break;
             }
         }
 
-        camera.setTranslateX(camera.getTranslateX() + cameraVelocity[0]);
-        camera.setTranslateY(camera.getTranslateY() + cameraVelocity[1]);
-        camera.setTranslateZ(camera.getTranslateZ() + cameraVelocity[2]);
+        camera.setTranslateX(camera.getTranslateX() + velocity[0]);
+        camera.setTranslateY(camera.getTranslateY() + velocity[1]);
+        camera.setTranslateZ(camera.getTranslateZ() + velocity[2]);
 
         // Camera Movement
-        double newXTilt = xTilt.getAngle() + cameraTiltVelocity[0];
-        double newYTilt = yTilt.getAngle() + cameraTiltVelocity[1];
+        double newXTilt = xTilt.getAngle() + turnVelocity[0];
+        double newYTilt = yTilt.getAngle() + turnVelocity[1];
 
         // Constrain how far they can look up or down to a 180deg range
         if (newYTilt > 90) {
