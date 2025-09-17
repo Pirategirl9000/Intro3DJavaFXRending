@@ -2,22 +2,34 @@ package org.example.fx_3d;
 
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 
 import java.util.Map;
 
 public class Player extends Group {
-    private int height;
-    private int width;
-    private int depth;
+    /**
+     * Height of the player's hitbox in pixels
+     */
+    private final int playerHeight = 20;
 
-    private double[] position = {0, 0, 0};
+    /**
+     * Width of the player's hitbox in pixels
+     */
+    private final int playerWidth = 10;
+
+    /**
+     * Depth of the player's hitbox in pixels
+     */
+    private final int playerDepth = 10;
 
     /**
      * The camera for the 3D environment, initialized through the initializeCamera(args) function
      */
     private final PerspectiveCamera camera = new PerspectiveCamera(true);
+
+    private Box hitbox;
 
     /**
      * Current speed at which our camera is tilting, this value is used when updating the angle of the camera (x, y, z)
@@ -53,22 +65,60 @@ public class Player extends Group {
      */
     private final double LOOKSPEED = 0.5;
 
+    /**
+     * Initializes a player with x, y, and z position as well as a set farClip and nearClip for the camera
+     * @param x x position
+     * @param y y position
+     * @param z z position
+     * @param farClip farClip of the camera (render distance)
+     * @param nearClip nearClip of the camera (near-render distance)
+     */
     public Player(int x, int y , int z, int farClip, int nearClip) {
         initializeCamera(x, y, z, farClip, nearClip, new Transform[] {xTilt, yTilt});
+        initializeHitbox(x, y, z, this.playerWidth, this.playerHeight, this.playerDepth);
+        this.getChildren().add(hitbox);
     }
 
+    /**
+     * Initializes a player with a set x, y, and z position
+     * @param x x position
+     * @param y y position
+     * @param z z postition
+     */
     public Player(int x, int y, int z) {
         this(x, y, z, 1000, 10);
     }
 
+    /**
+     * Initializes a player with default parameters
+     */
     public Player() {
-        this(0, 0, -200, 1000, 10);
+        this(0, -10, -200, 1000, 10);
     }
 
+    /**
+     * Gets the x position of the player (hitbox and camera)
+     * @return x position
+     */
+    public double getX() { return hitbox.getTranslateX(); }
 
-    public PerspectiveCamera getCamera() {
-        return this.camera;
-    }
+    /**
+     * Gets the y position of the player (hitbox and camera)
+     * @return y position
+     */
+    public double getY() { return hitbox.getTranslateY(); }
+
+    /**
+     * Gets the z position of the player (hitbox and camera)
+     * @return z position
+     */
+    public double getZ() { return hitbox.getTranslateZ(); }
+
+    /**
+     * Gets the perspective camera of the player
+     * @return PerspectiveCamera
+     */
+    public PerspectiveCamera getCamera() { return this.camera; }
 
     /**
      * Returns a vector of motion < cos(angle), sin(angle) >
@@ -102,6 +152,13 @@ public class Player extends Group {
         camera.setNearClip(nearClip);
         camera.setFarClip(farClip);
         camera.getTransforms().addAll(transforms);
+    }
+
+    private void initializeHitbox(int x, int y, int z, int width, int height, int depth) {
+        hitbox = new Box(width, height, depth);
+        hitbox.setTranslateX(x);
+        hitbox.setTranslateY(y);
+        hitbox.setTranslateZ(z);
     }
 
     public void move(Map<String, Boolean> keysHeld) {

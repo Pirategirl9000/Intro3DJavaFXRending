@@ -26,12 +26,6 @@ public class Main extends Application {
      */
     private final Scene scene = new Scene(root, 1920, 1080, true);
 
-
-
-
-
-
-
     /**
      * HashMap that tracks what keys are currently held
      * <p>
@@ -42,28 +36,24 @@ public class Main extends Application {
      */
     private final Map<String, Boolean> keysHeld = new HashMap<>();
 
+    /**
+     * Player object which controls the camera and will handle any player based events
+     */
     Player player = new Player();
 
     /**
      * AnimationTimer that controls the game loop
      */
-    //<editor-fold desc="private final AnimationTimer gameLoop = new AnimationTimer() {...}">
-    private final AnimationTimer gameLoop = new AnimationTimer()
-    {
-        public void handle(long now) {
-            player.move(keysHeld);
-        }
+    private final AnimationTimer gameLoop = new AnimationTimer() {
+        public void handle(long now) { player.move(keysHeld); }
     };
-    //</editor-fold>
 
 
     /**
      * Driver code for the program
      * @param args NULL
      */
-    public static void main(String[] args) {
-        launch();
-    }
+    public static void main(String[] args) { launch(); }
 
     /**
      * Sets the translation of a node
@@ -178,13 +168,14 @@ public class Main extends Application {
         initializeScene();
 
         Box[] transflag = makeTransFlag(100, 20, 100, 0, -50, 0);
-        Box ground = createBox(1000, 10, 1000, 0, 6, 0, Color.GREEN);
+        Box ground = createBox(1000, 10, 1000, 0, 5, 0, Color.GREEN);
 
-        Player player =  new Player();
+        Player player = new Player();
 
 
         root.getChildren().addAll(transflag);
         root.getChildren().add(ground);
+        root.getChildren().add(player);
         root.getChildren().add(new AmbientLight(Color.WHITE));  // Add an ambient light since I suck at pointLights and it provides even glow
 
         run(primaryStage);
