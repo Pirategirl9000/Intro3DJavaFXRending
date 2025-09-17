@@ -281,24 +281,24 @@ public class Main extends Application {
     }
 
     /**
-     * Create a ground plane
-     * @param width width of the plane
-     * @param height height of the plane
-     * @param depth depth of the plane
-     * @param x x position for center of plane
-     * @param y y position for center of plane
-     * @param z z position for center of plane
-     * @param color JavaFX.Color to draw the ground as
-     * @return Box ground
+     * Create a box with preset attributes
+     * @param width width of the box
+     * @param height height of the box
+     * @param depth depth of the box
+     * @param x x position for center of box
+     * @param y y position for center of box
+     * @param z z position for center of box
+     * @param color JavaFX.Color to draw the box as
+     * @return Box with the set attributes
      */
-    private Box createGround(int width, int height, int depth, int x, int y, int z, Color color) {
-        Box ground = new Box(width, height, depth);
+    private Box createBox(int width, int height, int depth, int x, int y, int z, Color color) {
+        Box box = new Box(width, height, depth);
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseColor(color);
-        ground.setMaterial(material);
-        setTranslate(ground, x, y, z);
+        box.setMaterial(material);
+        setTranslate(box, x, y, z);
 
-        return ground;
+        return box;
     }
 
 
@@ -313,7 +313,7 @@ public class Main extends Application {
         initializeScene();
 
         Box[] transflag = makeTransFlag(100, 20, 100, 0, -50, 0);
-        Box ground = createGround(1000, 10, 1000, 0, 6, 0, Color.GREEN);
+        Box ground = createBox(1000, 10, 1000, 0, 6, 0, Color.GREEN);
 
 
         root.getChildren().addAll(transflag);
