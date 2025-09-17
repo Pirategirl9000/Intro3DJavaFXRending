@@ -294,7 +294,7 @@ public class Main extends Application {
 
 
         root.getChildren().addAll(transflag);
-        root.getChildren().add(new AmbientLight(Color.WHITE));
+        root.getChildren().add(new AmbientLight(Color.WHITE));  // Add an ambient light since I suck at pointLights and it provides even glow
 
         run(primaryStage);
 
