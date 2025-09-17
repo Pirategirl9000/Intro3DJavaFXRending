@@ -9,6 +9,7 @@ import javafx.scene.AmbientLight;
 import javafx.scene.Scene;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 import javafx.scene.shape.Box;
 import javafx.scene.paint.Color;
@@ -17,6 +18,150 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Main extends Application {
+    /**
+     * The camera for the 3D environment, initialized through the initializeCamera(args) function
+     */
+    private final PerspectiveCamera camera = new PerspectiveCamera(true);
+
+    /**
+     * The xTilt transformer of the camera
+     * <p>
+     * It says Rotate.Y_AXIS but this is backwards because of how FX considers the coordinate plane
+     */
+    private final Rotate xTilt = new Rotate(0, Rotate.Y_AXIS);
+
+    /**
+     * The yTilt transformer of the camera
+     * <p>
+     * It says Rotate.X_AXIS but this is backwards because of how FX considers the coordinate plane
+     */
+    private final Rotate yTilt = new Rotate(0, Rotate.X_AXIS);
+
+    /**
+     * Serves as the primary display container for the application. Anything added to root will be displayed on stage
+     */
+    private final Group root = new Group();
+
+    /**
+     * Scene which is being displayed by the stage
+     */
+    private final Scene scene = new Scene(root, 1920, 1080, true);
+
+    /**
+     * Current speed at which our camera is moving, this value is determined by the lateral angle of the camera (xTilt) and is multiplied by the SPEED
+     */
+    private final double[] cameraVelocity =     {0, 0, 0};  // x, y, z move velocity
+
+    /**
+     * Current speed at which our camera is tilting, this value is used when updating the angle of the camera (x, y, z)
+     */
+    private final double[] cameraTiltVelocity = {0, 0, 0};
+
+    /**
+     * The speed at which the camera can move. Serves as a magnitude for our motion vectors
+     */
+    private final double SPEED = 0.5;
+
+    /**
+     * Look speed for the camera, impacts how fast the camera will tilt
+     */
+    private final double LOOKSPEED = 0.5;
+
+    /**
+     * HashMap that tracks what keys are currently held
+     * <p>
+     * Through my testing this seems to be one of the fastest ways for adding and removing based on the value
+     * I tested arraylists, vectors, arrays, and hashmaps and hashmaps stood out as the best option
+     * So although we never wind up using the value of the hash key it still appears more effective for the purpose of input tracking
+     */
+    private final Map<String, Boolean> keysHeld = new HashMap<>();
+
+    /**
+     * AnimationTimer that controls the game loop
+     */
+    //<editor-fold desc="private final AnimationTimer gameLoop = new AnimationTimer() {...}">
+    private final AnimationTimer gameLoop = new AnimationTimer()
+    {
+        public void handle(long now) {
+            // Reset the values through index assignment since the arrays are final
+            cameraVelocity[0] = 0;
+            cameraVelocity[1] = 0;
+            cameraVelocity[2] = 0;
+            cameraTiltVelocity[0] = 0;
+            cameraTiltVelocity[1] = 0;
+            cameraTiltVelocity[2] = 0;
+
+
+            // Calculate our motionVectors for x and z axial movement
+            double[] zMotionVector = getMotionVector(xTilt.getAngle());
+            double[] xMotionVector = getMotionVector(xTilt.getAngle() + 90);
+
+            // Handle the different key presses here
+            // We do it this way so there is dynamic movement where you can turn the camera and move at the same time
+            for (String key : keysHeld.keySet()) {
+                switch (key) {
+                    // Camera Controls
+                    case "Up":
+                        cameraTiltVelocity[1] = LOOKSPEED;
+                        break;
+                    case "Down":
+                        cameraTiltVelocity[1] = -LOOKSPEED;
+                        break;
+                    case "Left":
+                        cameraTiltVelocity[0] = -LOOKSPEED;
+                        break;
+                    case "Right":
+                        cameraTiltVelocity[0] = LOOKSPEED;
+                        break;
+
+                    // Movement Controls
+                    case "W":
+                        cameraVelocity[0] = zMotionVector[1] * SPEED;
+                        cameraVelocity[2] = zMotionVector[0] * SPEED;
+                        break;
+                    case "S":
+                        cameraVelocity[0] = zMotionVector[1] * -SPEED;
+                        cameraVelocity[2] = zMotionVector[0] * -SPEED;
+                        break;
+                    case "A":
+                        cameraVelocity[0] = xMotionVector[1] * -SPEED;
+                        cameraVelocity[2] = xMotionVector[0] * -SPEED;
+                        break;
+                    case "D":
+                        cameraVelocity[0] = xMotionVector[1] * SPEED;
+                        cameraVelocity[2] = xMotionVector[0] * SPEED;
+                        break;
+                    case "Space":
+                        cameraVelocity[1] = -SPEED;
+                        break;
+                    case "Shift":
+                        cameraVelocity[1] = SPEED;
+                        break;
+                }
+            }
+
+            camera.setTranslateX(camera.getTranslateX() + cameraVelocity[0]);
+            camera.setTranslateY(camera.getTranslateY() + cameraVelocity[1]);
+            camera.setTranslateZ(camera.getTranslateZ() + cameraVelocity[2]);
+
+            // Camera Movement
+            double newXTilt = xTilt.getAngle() + cameraTiltVelocity[0];
+            double newYTilt = yTilt.getAngle() + cameraTiltVelocity[1];
+
+            // Constrain how far they can look up or down to a 180deg range
+            if (newYTilt > 90) {
+                newYTilt = 90;
+            } else if (newYTilt < -90) {
+                newYTilt = -90;
+            }
+
+            xTilt.setAngle(newXTilt);
+            yTilt.setAngle(newYTilt);
+        }
+    };
+    //</editor-fold>
+
+
     /**
      * Driver code for the program
      * @param args NULL
@@ -32,7 +177,7 @@ public class Main extends Application {
      * @param y y position of the node
      * @param z z position of the node
      */
-    public void setTranslate(Node node, double x, double y, double z) {
+    private void setTranslate(Node node, double x, double y, double z) {
         node.setTranslateX(x);
         node.setTranslateY(y);
         node.setTranslateZ(z);
@@ -50,7 +195,7 @@ public class Main extends Application {
      * @param angle the angle of tilt/inclination
      * @return vector of motion for magnitude = 1
      */
-    public double[] getMotionVector(double angle) {
+    private double[] getMotionVector(double angle) {
         angle = Math.toRadians(angle);
         return new double[] {Math.cos(angle), Math.sin(angle)};
     }
@@ -66,7 +211,7 @@ public class Main extends Application {
      * @param z z position to center it on
      * @return an array of Boxes that make up the flag
      */
-    public Box[] makeTransFlag(int width, int height, int depth, int x, int y, int z) {
+    private Box[] makeTransFlag(int width, int height, int depth, int x, int y, int z) {
         final PhongMaterial pinkBanner = new PhongMaterial();
         final PhongMaterial blueBanner = new PhongMaterial();
         final PhongMaterial whiteBanner = new PhongMaterial();
@@ -97,6 +242,46 @@ public class Main extends Application {
     }
 
     /**
+     * Sets up the camera for the scene
+     * @param x initial x position of the camera
+     * @param y initial y position of the camera
+     * @param z initial z position of the camera
+     * @param farClip the far render distance for the camera
+     * @param nearClip the near render distance for the camera
+     * @param transforms the transforms or rotations for the camera
+     */
+    private void initializeCamera(int x, int y, int z, int farClip, int nearClip, Transform[] transforms) {
+        setTranslate(camera, x, y, z);
+        camera.setNearClip(nearClip);
+        camera.setFarClip(farClip);
+        camera.getTransforms().addAll(transforms);
+    }
+
+    /**
+     * Sets up the scene being displayed by the stage
+     */
+    private void initializeScene() {
+        scene.setCamera(camera);
+        scene.setFill(Color.BLACK);
+
+        // Set up keyListeners
+        // See AnimationTimer for keyHandling
+        scene.setOnKeyPressed(e -> keysHeld.put(e.getCode().getName(), true));
+        scene.setOnKeyReleased(e -> keysHeld.remove(e.getCode().getName()));
+    }
+
+    /**
+     * Runs the current scene on the stage and starts the application loop
+     */
+    private void run(Stage primaryStage) {
+        primaryStage.setScene(scene);
+        gameLoop.start();
+        primaryStage.show();
+    }
+
+
+
+    /**
      * Start point for the application
      * @param primaryStage stage to display content on
      * @throws IOException If error occurs during rendering
@@ -105,129 +290,17 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("3D Rendering");
 
-
-
-        // Set up the camera
-        PerspectiveCamera camera = new PerspectiveCamera(true);
-        Rotate xTilt = new Rotate(0, Rotate.Y_AXIS);
-        Rotate yTilt = new Rotate(0, Rotate.X_AXIS);
-        camera.setTranslateZ(-100);
-        camera.setFarClip(1000);
-        camera.getTransforms().addAll(xTilt, yTilt);
+        initializeCamera(0, 0, -200, 1000, 10, new Transform[] {xTilt, yTilt});
+        initializeScene();
 
         Box[] transflag = makeTransFlag(100, 20, 100, 0, 0, 0);
 
 
-
-
-
-        Group root = new Group();
         root.getChildren().addAll(transflag);
         root.getChildren().add(new AmbientLight(Color.WHITE));
 
+        run(primaryStage);
 
 
-        // Set up scene
-        Scene scene = new Scene(root, 1920, 1080, true);
-        scene.setFill(Color.BLACK);
-        scene.setCamera(camera);
-
-        final double[] cameraVelocity =     {0, 0, 0};  // x, y, z move velocity
-        final double[] cameraTiltVelocity = {0, 0, 0};  // x, y, z tilt velocity
-        final double SPEED = 0.5;
-        final double LOOKSPEED = 0.5;
-
-        // Why the hashmap?
-        // Through my testing this seems to be one of the fastest ways for adding and removing based on the value
-        // I tested arraylists, vectors, arrays, and hashmaps and hashmaps stood out as the best option
-        // So although we never wind up using the value of the hash key it still appears more effective in terms of popping by value
-        final Map<String, Boolean> keysHeld = new HashMap<>();
-
-        scene.setOnKeyPressed(e -> keysHeld.put(e.getCode().getName(), true));
-        scene.setOnKeyReleased(e -> keysHeld.remove(e.getCode().getName()));
-
-        AnimationTimer gameLoop = new AnimationTimer() {
-            public void handle(long now) {
-                // Reset the values through index assignment since the arrays are final
-                cameraVelocity[0] = 0;
-                cameraVelocity[1] = 0;
-                cameraVelocity[2] = 0;
-                cameraTiltVelocity[0] = 0;
-                cameraTiltVelocity[1] = 0;
-                cameraTiltVelocity[2] = 0;
-
-
-                // Calculate our motionVectors for x and z axial movement
-                double[] zMotionVector = getMotionVector(xTilt.getAngle());
-                double[] xMotionVector = getMotionVector(xTilt.getAngle() + 90);
-
-                // Handle the different key presses here
-                // We do it this way so there is dynamic movement where you can turn the camera and move at the same time
-                for (String key : keysHeld.keySet()) {
-                    switch (key) {
-                        // Camera Controls
-                        case "Up":
-                            cameraTiltVelocity[1] = LOOKSPEED;
-                            break;
-                        case "Down":
-                            cameraTiltVelocity[1] = -LOOKSPEED;
-                            break;
-                        case "Left":
-                            cameraTiltVelocity[0] = -LOOKSPEED;
-                            break;
-                        case "Right":
-                            cameraTiltVelocity[0] = LOOKSPEED;
-                            break;
-
-                        // Movement Controls
-                        case "W":
-                            cameraVelocity[0] = zMotionVector[1] * SPEED;
-                            cameraVelocity[2] = zMotionVector[0] * SPEED;
-                            break;
-                        case "S":
-                            cameraVelocity[0] = zMotionVector[1] * -SPEED;
-                            cameraVelocity[2] = zMotionVector[0] * -SPEED;
-                            break;
-                        case "A":
-                            cameraVelocity[0] = xMotionVector[1] * -SPEED;
-                            cameraVelocity[2] = xMotionVector[0] * -SPEED;
-                            break;
-                        case "D":
-                            cameraVelocity[0] = xMotionVector[1] * SPEED;
-                            cameraVelocity[2] = xMotionVector[0] * SPEED;
-                            break;
-                        case "Space":
-                            cameraVelocity[1] = -SPEED;
-                            break;
-                        case "Shift":
-                            cameraVelocity[1] = SPEED;
-                            break;
-                    }
-                }
-
-                camera.setTranslateX(camera.getTranslateX() + cameraVelocity[0]);
-                camera.setTranslateY(camera.getTranslateY() + cameraVelocity[1]);
-                camera.setTranslateZ(camera.getTranslateZ() + cameraVelocity[2]);
-
-                // Camera Movement
-                double newXTilt = xTilt.getAngle() + cameraTiltVelocity[0];
-                double newYTilt = yTilt.getAngle() + cameraTiltVelocity[1];
-
-                // Constrain how far they can look up or down to a 180deg range
-                if (newYTilt > 90) {
-                    newYTilt = 90;
-                } else if (newYTilt < -90) {
-                    newYTilt = -90;
-                }
-
-                xTilt.setAngle(newXTilt);
-                yTilt.setAngle(newYTilt);
-            }
-        };
-
-        gameLoop.start();
-
-        primaryStage.setScene(scene);
-        primaryStage.show();
     }
 }
