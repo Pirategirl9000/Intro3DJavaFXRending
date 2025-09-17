@@ -274,6 +274,7 @@ public class Main extends Application {
      * Runs the current scene on the stage and starts the application loop
      */
     private void run(Stage primaryStage) {
+        primaryStage.setTitle("3D Rendering");
         primaryStage.setScene(scene);
         gameLoop.start();
         primaryStage.show();
@@ -288,8 +289,6 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws IOException {
-        primaryStage.setTitle("3D Rendering");
-
         initializeCamera(0, 0, -200, 1000, 10, new Transform[] {xTilt, yTilt});
         initializeScene();
 
