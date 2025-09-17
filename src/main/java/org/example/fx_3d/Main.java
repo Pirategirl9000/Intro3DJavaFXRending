@@ -13,7 +13,6 @@ import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 import javafx.scene.shape.Box;
 import javafx.scene.paint.Color;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -285,10 +284,9 @@ public class Main extends Application {
     /**
      * Start point for the application
      * @param primaryStage stage to display content on
-     * @throws IOException If error occurs during rendering
      */
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) {
         initializeCamera(0, 0, -200, 1000, 10, new Transform[] {xTilt, yTilt});
         initializeScene();
 
