@@ -70,8 +70,9 @@ public class Main extends Application {
      * HashMap that tracks what keys are currently held
      * <p>
      * Through my testing this seems to be one of the fastest ways for adding and removing based on the value
-     * I tested arraylists, vectors, arrays, and hashmaps and hashmaps stood out as the best option
+     * I tested arraylists, vectors, arrays, and hashmaps; hashmaps stood out as the best option
      * So although we never wind up using the value of the hash key it still appears more effective for the purpose of input tracking
+     * For something like key handling we should strive to use the fastest possible method and hashMaps seem to stand out as such
      */
     private final Map<String, Boolean> keysHeld = new HashMap<>();
 
