@@ -11,7 +11,7 @@ import javafx.scene.transform.Transform;
 
 import java.util.Map;
 
-public class Player {
+public class Player extends Group {
     /**
      * Height of the player's hitbox in pixels
      */
@@ -181,6 +181,7 @@ public class Player {
         material.setDiffuseColor(Color.RED);
         hitbox.setMaterial(material);
         setTranslate(hitbox, x, y, z);
+        this.getChildren().add(hitbox);
     }
 
     public void move(Map<String, Boolean> keysHeld) {
