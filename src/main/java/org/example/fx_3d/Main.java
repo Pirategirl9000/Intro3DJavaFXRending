@@ -49,7 +49,7 @@ public class Main extends Application {
     /**
      * Current speed at which our camera is moving, this value is determined by the lateral angle of the camera (xTilt) and is multiplied by the SPEED
      */
-    private final double[] cameraVelocity =     {0, 0, 0};  // x, y, z move velocity
+    private final double[] cameraVelocity = {0, 0, 0};  // x, y, z move velocity
 
     /**
      * Current speed at which our camera is tilting, this value is used when updating the angle of the camera (x, y, z)
