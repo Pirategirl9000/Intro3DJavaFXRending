@@ -262,7 +262,7 @@ public class Main extends Application {
      */
     private void initializeScene() {
         scene.setCamera(camera);
-        scene.setFill(Color.BLACK);
+        scene.setFill(Color.SKYBLUE);
 
         // Set up keyListeners
         // See AnimationTimer for keyHandling
@@ -280,6 +280,27 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Create a ground plane
+     * @param width width of the plane
+     * @param height height of the plane
+     * @param depth depth of the plane
+     * @param x x position for center of plane
+     * @param y y position for center of plane
+     * @param z z position for center of plane
+     * @param color JavaFX.Color to draw the ground as
+     * @return Box ground
+     */
+    private Box createGround(int width, int height, int depth, int x, int y, int z, Color color) {
+        Box ground = new Box(width, height, depth);
+        PhongMaterial material = new PhongMaterial();
+        material.setDiffuseColor(color);
+        ground.setMaterial(material);
+        setTranslate(ground, x, y, z);
+
+        return ground;
+    }
+
 
 
     /**
@@ -291,10 +312,12 @@ public class Main extends Application {
         initializeCamera(0, 0, -200, 1000, 10, new Transform[] {xTilt, yTilt});
         initializeScene();
 
-        Box[] transflag = makeTransFlag(100, 20, 100, 0, 0, 0);
+        Box[] transflag = makeTransFlag(100, 20, 100, 0, -50, 0);
+        Box ground = createGround(1000, 10, 1000, 0, 6, 0, Color.GREEN);
 
 
         root.getChildren().addAll(transflag);
+        root.getChildren().add(ground);
         root.getChildren().add(new AmbientLight(Color.WHITE));  // Add an ambient light since I suck at pointLights and it provides even glow
 
         run(primaryStage);
