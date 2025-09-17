@@ -35,7 +35,7 @@ public class Player {
     /**
      * Hitbox for the player
      */
-    private Box hitbox;
+    private Box hitbox = new Box(playerWidth, playerHeight, playerDepth);
 
     /**
      * Current speed at which our camera is tilting, this value is used when updating the angle of the camera (x, y, z)
@@ -81,7 +81,7 @@ public class Player {
      */
     public Player(int x, int y , int z, int farClip, int nearClip) {
         initializeCamera(x, y, z, farClip, nearClip, new Transform[] {xTilt, yTilt});
-        initializeHitbox(x, y, z, this.playerWidth, this.playerHeight, this.playerDepth);
+        initializeHitbox(x, y, z);
     }
 
     /**
@@ -176,8 +176,7 @@ public class Player {
         camera.getTransforms().addAll(transforms);
     }
 
-    private void initializeHitbox(int x, int y, int z, int width, int height, int depth) {
-        hitbox = new Box(width, height, depth);
+    private void initializeHitbox(int x, int y, int z) {
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseColor(Color.RED);
         hitbox.setMaterial(material);

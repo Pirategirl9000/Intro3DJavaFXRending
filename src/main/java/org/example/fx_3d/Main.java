@@ -39,7 +39,7 @@ public class Main extends Application {
     /**
      * Player object which controls the camera and will handle any player based events
      */
-    Player player = new Player();
+    private final Player player = new Player();
 
     /**
      * AnimationTimer that controls the game loop
@@ -169,8 +169,6 @@ public class Main extends Application {
 
         Box[] transflag = makeTransFlag(100, 20, 100, 0, -50, 0);
         Box ground = createBox(1000, 10, 1000, 0, 5, 0, Color.GREEN);
-
-        Player player = new Player();
 
 
         root.getChildren().addAll(transflag);
