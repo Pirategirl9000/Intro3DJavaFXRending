@@ -42,7 +42,7 @@ public class Main extends Application {
     private final Group root = new Group();
 
     /**
-     * Scene which is being displayed by the stage
+     * Scene which is being displayed by the stage. Displays what is contained in the Group 'root'
      */
     private final Scene scene = new Scene(root, 1920, 1080, true);
 
