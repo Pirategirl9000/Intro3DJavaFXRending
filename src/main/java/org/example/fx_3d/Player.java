@@ -1,14 +1,17 @@
 package org.example.fx_3d;
 
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 
 import java.util.Map;
 
-public class Player extends Group {
+public class Player {
     /**
      * Height of the player's hitbox in pixels
      */
@@ -29,6 +32,9 @@ public class Player extends Group {
      */
     private final PerspectiveCamera camera = new PerspectiveCamera(true);
 
+    /**
+     * Hitbox for the player
+     */
     private Box hitbox;
 
     /**
@@ -76,7 +82,6 @@ public class Player extends Group {
     public Player(int x, int y , int z, int farClip, int nearClip) {
         initializeCamera(x, y, z, farClip, nearClip, new Transform[] {xTilt, yTilt});
         initializeHitbox(x, y, z, this.playerWidth, this.playerHeight, this.playerDepth);
-        this.getChildren().add(hitbox);
     }
 
     /**
@@ -121,6 +126,25 @@ public class Player extends Group {
     public PerspectiveCamera getCamera() { return this.camera; }
 
     /**
+     * Gets the hitbox of the player
+     * @return Box hitbox
+     */
+    public Box getHitbox() { return this.hitbox; }
+
+    /**
+     * Sets the translation properties of a node
+     * @param n node to be translated
+     * @param x node's new x position
+     * @param y node's new y position
+     * @param z node's new z position
+     */
+    private static void setTranslate(Node n, double x, double y, double z) {
+        n.setTranslateX(x);
+        n.setTranslateY(y);
+        n.setTranslateZ(z);
+    }
+
+    /**
      * Returns a vector of motion < cos(angle), sin(angle) >
      * <p>
      * This is used to determine the movement on two separate axis based on the angle of the camera allowing forward movement to take you in the direction of view
@@ -146,9 +170,7 @@ public class Player extends Group {
      * @param transforms the transforms or rotations for the camera
      */
     private void initializeCamera(int x, int y, int z, int farClip, int nearClip, Transform[] transforms) {
-        camera.setTranslateX(x);
-        camera.setTranslateY(y);
-        camera.setTranslateZ(z);
+        setTranslate(camera, x, y, z);
         camera.setNearClip(nearClip);
         camera.setFarClip(farClip);
         camera.getTransforms().addAll(transforms);
@@ -156,9 +178,10 @@ public class Player extends Group {
 
     private void initializeHitbox(int x, int y, int z, int width, int height, int depth) {
         hitbox = new Box(width, height, depth);
-        hitbox.setTranslateX(x);
-        hitbox.setTranslateY(y);
-        hitbox.setTranslateZ(z);
+        PhongMaterial material = new PhongMaterial();
+        material.setDiffuseColor(Color.RED);
+        hitbox.setMaterial(material);
+        setTranslate(hitbox, x, y, z);
     }
 
     public void move(Map<String, Boolean> keysHeld) {
@@ -176,7 +199,6 @@ public class Player extends Group {
         double[] xMotionVector = getMotionVector(xTilt.getAngle() + 90);
 
         // Handle the different key presses here
-        // We do it this way so there is dynamic movement where you can turn the camera and move at the same time
         for (String key : keysHeld.keySet()) {
             switch (key) {
                 // Camera Controls
@@ -219,9 +241,10 @@ public class Player extends Group {
             }
         }
 
-        camera.setTranslateX(camera.getTranslateX() + velocity[0]);
-        camera.setTranslateY(camera.getTranslateY() + velocity[1]);
-        camera.setTranslateZ(camera.getTranslateZ() + velocity[2]);
+        // Set the new position
+        double[] newPosition = {camera.getTranslateX() + velocity[0], camera.getTranslateY() + velocity[1], camera.getTranslateZ() + velocity[2]};
+        setTranslate(camera, newPosition[0], newPosition[1], newPosition[2]);
+        setTranslate(hitbox, newPosition[0], newPosition[1], newPosition[2]);
 
         // Camera Movement
         double newXTilt = xTilt.getAngle() + turnVelocity[0];
