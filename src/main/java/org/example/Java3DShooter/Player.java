@@ -40,12 +40,12 @@ public class Player extends Group {
     /**
      * Current speed at which our camera is tilting, this value is used when updating the angle of the camera (x, y, z)
      */
-    private final double[] turnVelocity = {0, 0, 0};
+    private double[] turnVelocity = {0, 0, 0};
 
     /**
      * Current speed at which our camera is moving, this value is determined by the lateral angle of the camera (xTilt) and is multiplied by the SPEED
      */
-    private final double[] velocity = {0, 0, 0};  // x, y, z move velocity
+    private double[] velocity = {0, 0, 0};  // x, y, z move velocity
 
     /**
      * The xTilt transformer of the camera
@@ -186,12 +186,9 @@ public class Player extends Group {
 
     public void move(Map<String, Boolean> keysHeld) {
         // Reset the values through index assignment since the arrays are final
-        velocity[0] = 0;
-        velocity[1] = 0;
-        velocity[2] = 0;
-        turnVelocity[0] = 0;
-        turnVelocity[1] = 0;
-        turnVelocity[2] = 0;
+        velocity = new double[] {0, 0, 0};
+        turnVelocity = new double[] {0, 0, 0};
+
 
 
         // Calculate our motionVectors for x and z axial movement
