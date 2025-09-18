@@ -1,6 +1,5 @@
 package org.example.java3dshootergame;
-
-// Test
+// test
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Node;
