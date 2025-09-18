@@ -157,6 +157,50 @@ public class Main extends Application {
     }
 
 
+    private boolean checkCollision(Box n, Box j) {
+        // Get the distance from center calculated
+        double nDistX = 0.5 * n.getWidth();
+        double nDistY = 0.5 * n.getHeight();
+        double nDistZ = 0.5 * n.getDepth();
+
+        // Calculate our node minimum and maximums
+        double nMinX = n.getTranslateX() - nDistX;
+        double nMaxX = n.getTranslateX() + nDistX;
+
+        double nMinY = n.getTranslateY() - nDistY;
+        double nMaxY = n.getTranslateY() + nDistY;
+
+        double nMinZ = n.getTranslateZ() - nDistZ;
+        double nMaxZ = n.getTranslateZ() + nDistZ;
+
+
+        // do the same for node j
+        double jDistX = 0.5 * j.getWidth();
+        double jDistY = 0.5 * j.getHeight();
+        double jDistZ = 0.5 * j.getDepth();
+
+        double jMinX = j.getTranslateX() - jDistX;
+        double jMaxX = j.getTranslateX() + jDistX;
+
+        double jMinY = j.getTranslateY() - jDistY;
+        double jMaxY = j.getTranslateY() + jDistY;
+
+        double jMinZ = j.getTranslateZ() - jDistZ;
+        double jMaxZ = j.getTranslateZ() + jDistZ;
+
+
+        // Thanks to https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection for the help since I hate writing these
+        return (
+                nMinX <= jMaxX &&
+                nMaxX >= jMinX &&
+                nMinY <= jMaxY &&
+                nMaxY >= jMinY &&
+                nMinZ <= jMaxZ &&
+                nMaxZ >= jMinZ
+        );
+    }
+
+
 
     /**
      * Start point for the application
