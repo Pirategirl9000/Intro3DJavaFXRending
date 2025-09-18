@@ -1,5 +1,5 @@
-package org.example.java3dshootergame;
-// test
+package org.example.Java3DShooter;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Node;
@@ -192,11 +192,11 @@ public class Main extends Application {
         // Thanks to https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection for the help since I hate writing these
         return (
                 nMinX <= jMaxX &&
-                        nMaxX >= jMinX &&
-                        nMinY <= jMaxY &&
-                        nMaxY >= jMinY &&
-                        nMinZ <= jMaxZ &&
-                        nMaxZ >= jMinZ
+                nMaxX >= jMinX &&
+                nMinY <= jMaxY &&
+                nMaxY >= jMinY &&
+                nMinZ <= jMaxZ &&
+                nMaxZ >= jMinZ
         );
     }
 
