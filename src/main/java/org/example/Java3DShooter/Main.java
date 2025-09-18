@@ -214,7 +214,6 @@ public class Main extends Application {
         Box[] transflag = makeTransFlag(100, 20, 100, 0, -50, 0);
         Box ground = createBox(1000, 10, 1000, 0, 5, 0, Color.GREEN);
 
-
         root.getChildren().addAll(transflag);
         root.getChildren().add(ground);
         root.getChildren().add(player);

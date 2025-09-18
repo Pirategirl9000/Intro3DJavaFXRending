@@ -189,7 +189,6 @@ public class Player extends Group {
         turnVelocity = new double[] {0, 0, 0};
 
 
-
         // Calculate our motionVectors for x and z axial movement
         double[] zMotionVector = getMotionVector(xTilt.getAngle());
         double[] xMotionVector = getMotionVector(xTilt.getAngle() + 90);
@@ -257,8 +256,4 @@ public class Player extends Group {
         yTilt.setAngle(newYTilt);
 
     }
-
-
-
-
 }
