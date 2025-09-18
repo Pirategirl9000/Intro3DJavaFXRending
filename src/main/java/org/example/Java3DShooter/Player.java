@@ -185,7 +185,6 @@ public class Player extends Group {
     }
 
     public void move(Map<String, Boolean> keysHeld) {
-        // Reset the values through index assignment since the arrays are final
         velocity = new double[] {0, 0, 0};
         turnVelocity = new double[] {0, 0, 0};
 
