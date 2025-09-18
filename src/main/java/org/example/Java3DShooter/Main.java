@@ -15,7 +15,6 @@ import java.util.Map;
 
 public class Main extends Application {
 
-
     /**
      * Serves as the primary display container for the application. Anything added to root will be displayed on stage
      */
@@ -156,47 +155,41 @@ public class Main extends Application {
         return box;
     }
 
+    /**
+     * Returns a bounding box of a Box object
+     * @param box Box to find the boundaries of
+     * @return double[3][2] {{minX, maxX}, {minY, maxY}, {minZ, maxZ}}
+     */
+    private double[][] getBoundingBox(Box box) {
+        double dx = box.getWidth() * 0.5;
+        double dy = box.getHeight() * 0.5;
+        double dz = box.getDepth() * 0.5;
 
+        return new double[][] {
+            {box.getTranslateX() - dx, box.getTranslateX() + dx},
+            {box.getTranslateY() - dy, box.getTranslateY() + dy},
+            {box.getTranslateZ() - dz, box.getTranslateZ() + dz},
+        };
+    }
+
+    /**
+     * Checks the collision between two Box's
+     * @param n One of the boxes to check collsion with
+     * @param j One of the boxes to check collsion with
+     * @return boolean signifying whether there is a collision
+     */
     private boolean checkCollision(Box n, Box j) {
-        // Get the distance from center calculated
-        double nDistX = 0.5 * n.getWidth();
-        double nDistY = 0.5 * n.getHeight();
-        double nDistZ = 0.5 * n.getDepth();
-
-        // Calculate our node minimum and maximums
-        double nMinX = n.getTranslateX() - nDistX;
-        double nMaxX = n.getTranslateX() + nDistX;
-
-        double nMinY = n.getTranslateY() - nDistY;
-        double nMaxY = n.getTranslateY() + nDistY;
-
-        double nMinZ = n.getTranslateZ() - nDistZ;
-        double nMaxZ = n.getTranslateZ() + nDistZ;
-
-
-        // do the same for node j
-        double jDistX = 0.5 * j.getWidth();
-        double jDistY = 0.5 * j.getHeight();
-        double jDistZ = 0.5 * j.getDepth();
-
-        double jMinX = j.getTranslateX() - jDistX;
-        double jMaxX = j.getTranslateX() + jDistX;
-
-        double jMinY = j.getTranslateY() - jDistY;
-        double jMaxY = j.getTranslateY() + jDistY;
-
-        double jMinZ = j.getTranslateZ() - jDistZ;
-        double jMaxZ = j.getTranslateZ() + jDistZ;
-
+        double[][] nBound = getBoundingBox(n);
+        double[][] jBound = getBoundingBox(j);
 
         // Thanks to https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection for the help since I hate writing these
         return (
-                nMinX <= jMaxX &&
-                nMaxX >= jMinX &&
-                nMinY <= jMaxY &&
-                nMaxY >= jMinY &&
-                nMinZ <= jMaxZ &&
-                nMaxZ >= jMinZ
+                nBound[0][0] <= jBound[0][1] &&
+                nBound[0][1] >= jBound[0][0] &&
+                nBound[1][0] <= jBound[1][1] &&
+                nBound[1][1] >= jBound[1][0] &&
+                nBound[2][0] <= jBound[2][1] &&
+                nBound[2][1] >= jBound[2][0]
         );
     }
 

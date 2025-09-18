@@ -184,6 +184,10 @@ public class Player extends Group {
         this.getChildren().add(hitbox);
     }
 
+    /**
+     * Moves the player forward a frame
+     * @param keysHeld the keys currently being help
+     */
     public void move(Map<String, Boolean> keysHeld) {
         velocity = new double[] {0, 0, 0};
         turnVelocity = new double[] {0, 0, 0};
