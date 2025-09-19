@@ -45,7 +45,7 @@ public class Player extends Group {
     /**
      * Field of view of the camera
      */
-    private final int FOV = 80;
+    private final double FOV = 40F;
 
     /**
      * The camera for the 3D environment, initialized through the initializeCamera(args) function
@@ -108,7 +108,7 @@ public class Player extends Group {
      * Initializes a player with default parameters
      */
     public Player() {
-        this(0, -10, -200, 3000, 10);
+        this(0, -10, -200, 5000, 10);
     }
 
     /**

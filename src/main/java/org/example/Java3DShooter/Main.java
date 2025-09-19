@@ -2,10 +2,7 @@ package org.example.Java3DShooter;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.scene.Node;
-import javafx.scene.Group;
-import javafx.scene.AmbientLight;
-import javafx.scene.Scene;
+import javafx.scene.*;
 import javafx.scene.paint.PhongMaterial;
 import javafx.stage.Stage;
 import javafx.scene.shape.Box;
@@ -39,6 +36,11 @@ public class Main extends Application {
      * Player object which controls the camera and will handle any player based events
      */
     private final Player player = new Player();
+
+    private final double SUNWIDTH = 40;
+    private final double SUNHEIGHT = 40;
+    private final double SUNDEPTH = 40;
+    private final double[] SUNCOORDS = {3000, -1000, 3000};
 
     /**
      * AnimationTimer that controls the game loop
@@ -209,17 +211,20 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
-        // Setup the scene
+        // Set up the scene
         initializeScene();
 
         // Create any objects
         Box[] transflag = makeTransFlag(100, 20, 100, 0, -50, 0);
         Box ground = createBox(GROUNDWIDTH, GROUNDHEIGHT, GROUNDDEPTH, 0, GROUNDHEIGHT * 0.5, 0, Color.GREEN);
+        Box sun = createBox(SUNWIDTH, SUNHEIGHT, SUNDEPTH, SUNCOORDS[0], SUNCOORDS[1], SUNCOORDS[2], Color.YELLOW);
+
 
         // Add the objects to root
         root.getChildren().addAll(transflag);
         root.getChildren().add(ground);
         root.getChildren().add(player);
+        root.getChildren().add(sun);
         root.getChildren().add(new AmbientLight(Color.WHITE));  // Add an ambient light since I suck at pointLights and it provides even glow
 
         // Start the gameloop and display application
