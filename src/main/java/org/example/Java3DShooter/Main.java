@@ -67,8 +67,6 @@ public class Main extends Application {
         node.setTranslateZ(z);
     }
 
-
-
     /**
      * Creates a trans flag centered on a certain point
      * @param width width of the flag
@@ -108,8 +106,6 @@ public class Main extends Application {
 
         return boxes;
     }
-
-
 
     /**
      * Sets up the scene being displayed by the stage

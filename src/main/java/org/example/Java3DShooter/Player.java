@@ -11,6 +11,11 @@ import javafx.scene.transform.Transform;
 
 import java.util.Map;
 
+/**
+ * The Player class contains information regarding the player. The player is a type of Group containing the player's hitbox. The player also has a PerspectiveCamera attached
+ * to it allowing for first person movement. The player's hitbox and camera are both have position's tied to the move function which will move both Node's in accordance with the defined
+ * movement controls when called
+ */
 public class Player extends Group {
     /**
      * Height of the player's hitbox in pixels
