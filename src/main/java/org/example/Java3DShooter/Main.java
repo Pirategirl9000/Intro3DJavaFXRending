@@ -47,6 +47,20 @@ public class Main extends Application {
         public void handle(long now) { player.move(keysHeld); }
     };
 
+    /**
+     * Width of the ground
+     */
+    private final int GROUNDWIDTH = 3000;
+
+    /**
+     * Height (thickness) of the ground plane
+     */
+    private final int GROUNDHEIGHT = 10;
+
+    /**
+     * Depth (length of z axis) of the ground plane
+     */
+    private final int GROUNDDEPTH = GROUNDWIDTH;
 
     /**
      * Driver code for the program
@@ -141,7 +155,7 @@ public class Main extends Application {
      * @param color JavaFX.Color to draw the box as
      * @return Box with the set attributes
      */
-    private Box createBox(int width, int height, int depth, int x, int y, int z, Color color) {
+    private Box createBox(double width, double height, double depth, double x, double y, double z, Color color) {
         Box box = new Box(width, height, depth);
         PhongMaterial material = new PhongMaterial();
         material.setDiffuseColor(color);
@@ -156,7 +170,7 @@ public class Main extends Application {
      * @param box Box to find the boundaries of
      * @return double[3][2] {{minX, maxX}, {minY, maxY}, {minZ, maxZ}}
      */
-    private double[][] getBoundingBox(Box box) {
+    private double[][] calculateBoundingBox(Box box) {
         double dx = box.getWidth() * 0.5;
         double dy = box.getHeight() * 0.5;
         double dz = box.getDepth() * 0.5;
@@ -174,9 +188,9 @@ public class Main extends Application {
      * @param j One of the boxes to check collsion with
      * @return boolean signifying whether there is a collision
      */
-    private boolean checkCollision(Box n, Box j) {
-        double[][] nBound = getBoundingBox(n);
-        double[][] jBound = getBoundingBox(j);
+    private boolean isColliding(Box n, Box j) {
+        double[][] nBound = calculateBoundingBox(n);
+        double[][] jBound = calculateBoundingBox(j);
 
         // Thanks to https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection for the help since I hate writing these
         return (
@@ -189,27 +203,26 @@ public class Main extends Application {
         );
     }
 
-
-
     /**
      * Start point for the application
      * @param primaryStage stage to display content on
      */
     @Override
     public void start(Stage primaryStage) {
-
+        // Setup the scene
         initializeScene();
 
+        // Create any objects
         Box[] transflag = makeTransFlag(100, 20, 100, 0, -50, 0);
-        Box ground = createBox(1000, 10, 1000, 0, 5, 0, Color.GREEN);
+        Box ground = createBox(GROUNDWIDTH, GROUNDHEIGHT, GROUNDDEPTH, 0, GROUNDHEIGHT * 0.5, 0, Color.GREEN);
 
+        // Add the objects to root
         root.getChildren().addAll(transflag);
         root.getChildren().add(ground);
         root.getChildren().add(player);
         root.getChildren().add(new AmbientLight(Color.WHITE));  // Add an ambient light since I suck at pointLights and it provides even glow
 
+        // Start the gameloop and display application
         run(primaryStage);
-
-
     }
 }

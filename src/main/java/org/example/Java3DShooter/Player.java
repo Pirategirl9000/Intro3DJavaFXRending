@@ -20,17 +20,32 @@ public class Player extends Group {
     /**
      * Height of the player's hitbox in pixels
      */
-    private final int playerHeight = 20;
+    private final int PLAYERHEIGHT = 20;
 
     /**
      * Width of the player's hitbox in pixels
      */
-    private final int playerWidth = 10;
+    private final int PLAYERWIDTH = 10;
 
     /**
      * Depth of the player's hitbox in pixels
      */
-    private final int playerDepth = 10;
+    private final int PLAYERDEPTH = 10;
+
+    /**
+     * The speed at which the camera can move. Serves as a magnitude for our motion vectors
+     */
+    private final double SPEED = 0.5;
+
+    /**
+     * Look speed for the camera, impacts how fast the camera will tilt
+     */
+    private final double LOOKSPEED = 0.5;
+
+    /**
+     * Field of view of the camera
+     */
+    private final int FOV = 80;
 
     /**
      * The camera for the 3D environment, initialized through the initializeCamera(args) function
@@ -40,7 +55,7 @@ public class Player extends Group {
     /**
      * Hitbox for the player
      */
-    private Box hitbox = new Box(playerWidth, playerHeight, playerDepth);
+    private Box hitbox = new Box(PLAYERWIDTH, PLAYERHEIGHT, PLAYERDEPTH);
 
     /**
      * Current speed at which our camera is tilting, this value is used when updating the angle of the camera (x, y, z)
@@ -65,16 +80,6 @@ public class Player extends Group {
      * It says Rotate.X_AXIS but this is backwards because of how FX considers the coordinate plane
      */
     private final Rotate yTilt = new Rotate(0, Rotate.X_AXIS);
-
-    /**
-     * The speed at which the camera can move. Serves as a magnitude for our motion vectors
-     */
-    private final double SPEED = 0.5;
-
-    /**
-     * Look speed for the camera, impacts how fast the camera will tilt
-     */
-    private final double LOOKSPEED = 0.5;
 
     /**
      * Initializes a player with x, y, and z position as well as a set farClip and nearClip for the camera
@@ -103,7 +108,7 @@ public class Player extends Group {
      * Initializes a player with default parameters
      */
     public Player() {
-        this(0, -10, -200, 1000, 10);
+        this(0, -10, -200, 3000, 10);
     }
 
     /**
@@ -160,7 +165,7 @@ public class Player extends Group {
      * @param angle the angle of tilt/inclination
      * @return vector of motion for magnitude = 1
      */
-    private double[] getMotionVector(double angle) {
+    private double[] calculateMotionVector(double angle) {
         angle = Math.toRadians(angle);
         return new double[] {Math.cos(angle), Math.sin(angle)};
     }
@@ -179,6 +184,7 @@ public class Player extends Group {
         camera.setNearClip(nearClip);
         camera.setFarClip(farClip);
         camera.getTransforms().addAll(transforms);
+        camera.setFieldOfView(FOV);
     }
 
     private void initializeHitbox(int x, int y, int z) {
@@ -199,8 +205,8 @@ public class Player extends Group {
 
 
         // Calculate our motionVectors for x and z axial movement
-        double[] zMotionVector = getMotionVector(xTilt.getAngle());
-        double[] xMotionVector = getMotionVector(xTilt.getAngle() + 90);
+        double[] zMotionVector = calculateMotionVector(xTilt.getAngle());
+        double[] xMotionVector = calculateMotionVector(xTilt.getAngle() + 90);
 
         // Handle the different key presses here
         for (String key : keysHeld.keySet()) {
