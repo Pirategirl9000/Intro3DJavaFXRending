@@ -29,6 +29,16 @@ public class Player extends Group {
     private final int PLAYERWIDTH = 10;
 
     /**
+     * Number of frames between shots. Note that AnimationTimer pulses at 60Hz so we need to multiply the cooldown by 60
+     */
+    private final int SHOTCOOLDOWN = 60 * 1;
+
+    /**
+     * Frames left before the player can shoot again
+     */
+    private int nextShot = 0;
+
+    /**
      * All the current projectiles fired by the player as a list of Bullet's
      */
     private final ArrayList<Bullet> projectiles = new ArrayList<>();
@@ -154,6 +164,14 @@ public class Player extends Group {
     public Box getHitbox() { return this.hitbox; }
 
     /**
+     * Gets all the bullets as an array of boxes
+     * @return box[] bullets
+     */
+    public Box[] getBullets() {
+        return projectiles.toArray(new Box[0]);
+    }
+
+    /**
      * Sets the translation properties of a node
      * @param n node to be translated
      * @param x node's new x position
@@ -211,6 +229,8 @@ public class Player extends Group {
      * Creates a new bullet at the player's position
      */
     private void shoot() {
+        if (nextShot > 0) {return;}  // They are still on cooldown
+
         double[] xTiltVector = calculateMotionVector(xTilt.getAngle());
         double[] yTiltVector = calculateMotionVector(yTilt.getAngle());
 
@@ -220,6 +240,9 @@ public class Player extends Group {
                 camera.getTranslateX(), camera.getTranslateY(), camera.getTranslateZ(),
                 xTiltVector[1], -yTiltVector[1], xTiltVector[0]
         ));
+
+        // Set the cooldown before their next shot
+        nextShot = SHOTCOOLDOWN;
 
     }
 
@@ -250,6 +273,10 @@ public class Player extends Group {
     public void move(Map<String, Boolean> keysHeld) {
         // Update the bullet's positions
         moveBullets();
+
+        // Reduce the cooldown before the next shot
+        // We do this through a conditional to prevent a negative overflow if they don't shoot for too long
+        if (nextShot > 0) {nextShot--;}
 
         // Clear our old velocities so we can reassign them based on the inputs held
         velocity = new double[] {0, 0, 0};
@@ -324,6 +351,5 @@ public class Player extends Group {
 
         xTilt.setAngle(newXTilt);
         yTilt.setAngle(newYTilt);
-
     }
 }
