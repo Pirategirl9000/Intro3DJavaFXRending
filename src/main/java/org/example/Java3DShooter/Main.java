@@ -7,6 +7,8 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.stage.Stage;
 import javafx.scene.shape.Box;
 import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +18,8 @@ public class Main extends Application {
      * Serves as the primary display container for the application. Anything added to root will be displayed on stage
      */
     private final Group root = new Group();
+
+    private final Group projectiles = new Group();
 
     /**
      * Scene which is being displayed by the stage. Displays what is contained in the Group 'root'
@@ -37,6 +41,7 @@ public class Main extends Application {
      */
     private final Player player = new Player();
 
+
     private final double SUNWIDTH = 40;
     private final double SUNHEIGHT = 40;
     private final double SUNDEPTH = 40;
@@ -46,7 +51,11 @@ public class Main extends Application {
      * AnimationTimer that controls the game loop
      */
     private final AnimationTimer gameLoop = new AnimationTimer() {
-        public void handle(long now) { player.move(keysHeld); }
+        public void handle(long now) {
+            player.move(keysHeld);
+
+
+        }
     };
 
     /**

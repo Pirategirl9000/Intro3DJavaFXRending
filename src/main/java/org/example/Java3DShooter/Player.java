@@ -9,6 +9,7 @@ import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -26,6 +27,16 @@ public class Player extends Group {
      * Width of the player's hitbox in pixels
      */
     private final int PLAYERWIDTH = 10;
+
+    /**
+     * All the current projectiles fired by the player as a list of Bullet's
+     */
+    private final ArrayList<Bullet> projectiles = new ArrayList<>();
+
+    /**
+     * All the projectiles as a group
+     */
+    private final Group projectilesGroup = new Group();
 
     /**
      * Depth of the player's hitbox in pixels
@@ -92,6 +103,7 @@ public class Player extends Group {
     public Player(int x, int y , int z, int farClip, int nearClip) {
         initializeCamera(x, y, z, farClip, nearClip, new Transform[] {xTilt, yTilt});
         initializeHitbox(x, y, z);
+        this.getChildren().add(projectilesGroup); // Stores and updates the currently living bullets
     }
 
     /**
@@ -196,10 +208,50 @@ public class Player extends Group {
     }
 
     /**
+     * Creates a new bullet at the player's position
+     */
+    private void shoot() {
+        double[] xTiltVector = calculateMotionVector(xTilt.getAngle());
+        double[] yTiltVector = calculateMotionVector(yTilt.getAngle());
+
+        // Add a new bullet to the projectiles list with the camera's coordinates then the velocity of the x, y, and z axis
+        // Y-axis is negative here because of how the y-axis is reversed in the world of programming
+        projectiles.add(new Bullet(
+                camera.getTranslateX(), camera.getTranslateY(), camera.getTranslateZ(),
+                xTiltVector[1], -yTiltVector[1], xTiltVector[0]
+        ));
+
+    }
+
+    /**
+     * Updates the positions of every bullet and kills any bullets whose timeToLive is expired
+     */
+    private void moveBullets() {
+        for (int i = 0; i < projectiles.size(); i++) {
+            Bullet bullet = projectiles.get(i);
+
+            // If the bullet's TTL is expired we remove it from our projectiles list
+            if (bullet.getTimeToLive() <= 0) {
+                projectiles.remove(bullet);
+                continue;
+            }
+
+            bullet.move();
+        }
+
+        // Reset the projectilesGroup so that it only has the currently living projectiles
+        projectilesGroup.getChildren().setAll(projectiles);
+    }
+
+    /**
      * Moves the player forward a frame
      * @param keysHeld the keys currently being help
      */
     public void move(Map<String, Boolean> keysHeld) {
+        // Update the bullet's positions
+        moveBullets();
+
+        // Clear our old velocities so we can reassign them based on the inputs held
         velocity = new double[] {0, 0, 0};
         turnVelocity = new double[] {0, 0, 0};
 
@@ -247,6 +299,9 @@ public class Player extends Group {
                     break;
                 case "Shift":
                     velocity[1] = SPEED;
+                    break;
+                case "Y":
+                    shoot();
                     break;
             }
         }
