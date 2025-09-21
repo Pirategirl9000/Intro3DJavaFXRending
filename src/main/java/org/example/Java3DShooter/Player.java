@@ -21,17 +21,22 @@ public class Player extends Group {
     /**
      * Height of the player's hitbox in pixels
      */
-    private final int PLAYERHEIGHT = 20;
+    private static final int PLAYERHEIGHT = 20;
 
     /**
      * Width of the player's hitbox in pixels
      */
-    private final int PLAYERWIDTH = 10;
+    private static final int PLAYERWIDTH = 10;
+
+    /**
+     * Depth of the player's hitbox in pixels
+     */
+    private static final int PLAYERDEPTH = 10;
 
     /**
      * Number of frames between shots. Note that AnimationTimer pulses at 60Hz so we need to multiply the cooldown by 60
      */
-    private final int SHOTCOOLDOWN = 60 * 1;
+    private static final int SHOTCOOLDOWN = 60 * 1;
 
     /**
      * Frames left before the player can shoot again
@@ -49,24 +54,19 @@ public class Player extends Group {
     private final Group projectilesGroup = new Group();
 
     /**
-     * Depth of the player's hitbox in pixels
-     */
-    private final int PLAYERDEPTH = 10;
-
-    /**
      * The speed at which the camera can move. Serves as a magnitude for our motion vectors
      */
-    private final double SPEED = 0.5;
+    private static final double SPEED = 0.5;
 
     /**
      * Look speed for the camera, impacts how fast the camera will tilt
      */
-    private final double LOOKSPEED = 0.5;
+    private static final double LOOKSPEED = 0.5;
 
     /**
      * Field of view of the camera
      */
-    private final double FOV = 40F;
+    private static final double FOV = 40F;
 
     /**
      * The camera for the 3D environment, initialized through the initializeCamera(args) function
@@ -222,6 +222,7 @@ public class Player extends Group {
         material.setDiffuseColor(Color.RED);
         hitbox.setMaterial(material);
         setTranslate(hitbox, x, y, z);
+        hitbox.setVisible(false);
         this.getChildren().add(hitbox);
     }
 

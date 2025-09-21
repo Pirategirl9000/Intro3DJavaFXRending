@@ -1,22 +1,24 @@
 package org.example.Java3DShooter;
 
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 
 public class Bullet extends Box {
     /**
      * Width of the bullet
      */
-    private static final double WIDTH = 5;
+    private static final double WIDTH = 3;
 
     /**
      * Height of the bullet
      */
-    private static final double HEIGHT = 5;
+    private static final double HEIGHT = 3;
 
     /**
      * Depth (z length) of the bullet
      */
-    private static final double DEPTH = 5;
+    private static final double DEPTH = 3;
 
     /**
      * Speed of the bullet, serves as a magnitude for the motion vector
@@ -27,6 +29,11 @@ public class Bullet extends Box {
      * Number of move frames before the bullet dies
      */
     private int timeToLive = 3000;
+
+    /**
+     * Color of the bullets
+     */
+    private static final Color color = Color.BLACK;
 
     /**
      * X, Y, Z velocity of the bullet - Does not decrease as it travels
@@ -45,6 +52,8 @@ public class Bullet extends Box {
         super.setTranslateX(x);
         super.setTranslateY(y);
         super.setTranslateZ(z);
+
+        super.setMaterial(new PhongMaterial(color));
 
         velocity = new double[] {xVel * BULLETSPEED, yVel * BULLETSPEED, zVel * BULLETSPEED};
     }

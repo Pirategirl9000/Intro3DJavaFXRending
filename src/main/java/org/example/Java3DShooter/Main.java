@@ -41,11 +41,40 @@ public class Main extends Application {
      */
     private final Player player = new Player();
 
+    /**
+     * Width of the sun
+     */
+    private static final double SUNWIDTH = 40;
 
-    private final double SUNWIDTH = 40;
-    private final double SUNHEIGHT = 40;
-    private final double SUNDEPTH = 40;
-    private final double[] SUNCOORDS = {3000, -1000, 3000};
+    /**
+     * Height of the sun
+     */
+    private static final double SUNHEIGHT = 40;
+
+    /**
+     * Depth of the sun (z-length)
+     */
+    private static final double SUNDEPTH = 40;
+
+    /**
+     * Coordinates of the sun
+     */
+    private static final double[] SUNCOORDS = {3000, -1000, 3000};
+
+    /**
+     * Width of the ground
+     */
+    private static final int GROUNDWIDTH = 3000;
+
+    /**
+     * Height (thickness) of the ground plane
+     */
+    private static final int GROUNDHEIGHT = 10;
+
+    /**
+     * Depth (length of z axis) of the ground plane
+     */
+    private static final int GROUNDDEPTH = GROUNDWIDTH;
 
     /**
      * AnimationTimer that controls the game loop
@@ -57,21 +86,6 @@ public class Main extends Application {
 
         }
     };
-
-    /**
-     * Width of the ground
-     */
-    private final int GROUNDWIDTH = 3000;
-
-    /**
-     * Height (thickness) of the ground plane
-     */
-    private final int GROUNDHEIGHT = 10;
-
-    /**
-     * Depth (length of z axis) of the ground plane
-     */
-    private final int GROUNDDEPTH = GROUNDWIDTH;
 
     /**
      * Driver code for the program
@@ -232,7 +246,7 @@ public class Main extends Application {
         // Add the objects to root
         root.getChildren().addAll(transflag);
         root.getChildren().add(ground);
-        root.getChildren().add(player);
+        root.getChildren().add(player);  // Player stores both the player's hitbox and all bullets
         root.getChildren().add(sun);
         root.getChildren().add(new AmbientLight(Color.WHITE));  // Add an ambient light since I suck at pointLights and it provides even glow
 
