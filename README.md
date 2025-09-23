@@ -63,7 +63,7 @@ ___
 ### This is all calculated in the Player class so that the bullet can remain very nodal by nature
 ### Due to Bullet being nodal it only has two methods associated with it, getTimeToLive() and move()
 #
-### The move() method updates the bullets position by it's velocities and then decreases it's remaining timeToLive by one
+### The move() method updates the bullets position by its velocities and then decreases it's remaining timeToLive by one
 ### timeToLive is the number of frames the bullet will exist for before the Player class will kill it
 ### The getTimeToLive() function allows the player class to access the TTL and cull bullets whose TTL has expired
 #
