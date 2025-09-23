@@ -1,13 +1,35 @@
 package org.example.Java3DShooter;
 
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
-import java.util.Random;
 
 public class Enemy extends Box {
+
+    /**
+     * The bounding box of the ground plane as defined by {{xMin, xMax}, {yMin, yMax}, {zMin, zMax}}
+     */
     private static double[][] groundPlaneBoundingBox;
+
+    /**
+     * Width of the enemy's sprite
+     */
     private static final double WIDTH = 10;
+
+    /**
+     * Height of the enemy's sprite
+     */
     private static final double HEIGHT = 20;
+
+    /**
+     * Depth of the enemy's sprite (length of z-axis)
+     */
     private static final double DEPTH = 10;
+
+    /**
+     * Color of the enemy's sprite
+     */
+    private static final Color COLOR = Color.RED;
 
     /**
      * initializes a new Enemy
@@ -19,6 +41,11 @@ public class Enemy extends Box {
         if (groundPlaneBoundingBox == null) {
             throw new NullPointerException("No groundPlaneBoundingBox set");
         }
+
+        PhongMaterial material = new PhongMaterial(COLOR);
+        super.setMaterial(material);
+
+
     }
 
     /**
