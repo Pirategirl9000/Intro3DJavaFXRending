@@ -53,3 +53,22 @@ ___
 ### It also updates the camera's angle of tilt and the positions of all living bullets (culling any bullets whose TTL has expired)
 ### Note that the camera's yTilt angle is bounded to [-90°, 90°] to prent turning the camera all the way around
 ### This allows more realistic camera movement that isn't disorienting when the player looks too far up.
+___
+## Bullet
+### The Bullet class serves to carefully bundle together relevant information for a projectile
+### Bullet extends Box so it can easily be added to a Group and displayed on scene which is all done by the player class
+### Player has an ArrayList of Bullets that are added to a group then pushed to the scene that way Main doesn't need to focus on handling projectile logic
+#
+### When a bullet is created it receives a position and velocity vector so it knows where it starts and what direction it goes in
+### This is all calculated in the Player class so that the bullet can remain very nodal by nature
+### Due to Bullet being nodal it only has two methods associated with it, getTimeToLive() and move()
+#
+### The move() method updates the bullets position by it's velocities and then decreases it's remaining timeToLive by one
+### timeToLive is the number of frames the bullet will exist for before the Player class will kill it
+### The getTimeToLive() function allows the player class to access the TTL and cull bullets whose TTL has expired
+#
+### The bullet takes in a base velocity on initialization which is then multiplied by the BULLETSPEED to create the finalized velocity vector for the bullet
+#
+___
+## Enemy
+
