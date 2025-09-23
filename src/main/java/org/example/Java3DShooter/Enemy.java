@@ -5,9 +5,9 @@ import java.util.Random;
 
 public class Enemy extends Box {
     private static double[][] groundPlaneBoundingBox;
-    private static final double WIDTH;
-    private static final double HEIGHT;
-    private static final double DEPTH;
+    private static final double WIDTH = 10;
+    private static final double HEIGHT = 20;
+    private static final double DEPTH = 10;
 
     /**
      * initializes a new Enemy
