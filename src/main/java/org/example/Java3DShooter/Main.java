@@ -17,8 +17,6 @@ public class Main extends Application {
      */
     private final Group root = new Group();
 
-    private final Group projectiles = new Group();
-
     /**
      * Scene which is being displayed by the stage. Displays what is contained in the Group 'root'
      */
