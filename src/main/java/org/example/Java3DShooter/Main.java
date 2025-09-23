@@ -238,6 +238,8 @@ public class Main extends Application {
         Box ground = createBox(GROUNDWIDTH, GROUNDHEIGHT, GROUNDDEPTH, 0, GROUNDHEIGHT * 0.5, 0, Color.GREEN);
         Box sun = createBox(SUNWIDTH, SUNHEIGHT, SUNDEPTH, SUNCOORDS[0], SUNCOORDS[1], SUNCOORDS[2], Color.YELLOW);
 
+        // Pass the boundingBox for the ground plane to the Enemy class so it knows how to spawn the enemies
+        Enemy.setGroundPlaneBoundingBox(calculateBoundingBox(ground));
 
         // Add the objects to root
         root.getChildren().addAll(transflag);
