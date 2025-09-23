@@ -34,6 +34,16 @@ public class Player extends Group {
     private static final int PLAYERDEPTH = 10;
 
     /**
+     * The maximum amount of hitpoints for the player
+     */
+    private static final int MAXHP = 5;
+
+    /**
+     * Current hitpoints of the player
+     */
+    private int HP = MAXHP;
+
+    /**
      * Number of frames between shots. Note that AnimationTimer pulses at 60Hz so we need to multiply the cooldown by 60
      */
     private static final int SHOTCOOLDOWN = 60 * 1;
@@ -266,6 +276,21 @@ public class Player extends Group {
         // Reset the projectilesGroup so that it only has the currently living projectiles
         projectilesGroup.getChildren().setAll(projectiles);
     }
+
+    /**
+     * Reduces the player's health by the damage taken unless the player is already dead
+     * @param damage damage taken
+     */
+    public void takeDamage(int damage) {
+        if (isDead()) {return;}  // Player is already dead
+        this.HP -= damage;
+    }
+
+    /**
+     * Returns whether the player is dead
+     * @return isDead?
+     */
+    public boolean isDead() { return this.HP <= 0; }
 
     /**
      * Moves the player forward a frame

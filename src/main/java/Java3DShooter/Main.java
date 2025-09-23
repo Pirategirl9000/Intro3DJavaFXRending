@@ -78,6 +78,7 @@ public class Main extends Application {
      */
     private final AnimationTimer gameLoop = new AnimationTimer() {
         public void handle(long now) {
+            if (player.isDead()) {this.stop();}  // stops the gameLoop if the player is dead
             player.move(keysHeld);
 
 
