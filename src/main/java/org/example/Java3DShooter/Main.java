@@ -204,7 +204,7 @@ public class Main extends Application {
     }
 
     /**
-     * Checks the collision between two Box's
+     * Checks the collision between two Boxes
      * @param n One of the boxes to check collsion with
      * @param j One of the boxes to check collsion with
      * @return boolean signifying whether there is a collision
