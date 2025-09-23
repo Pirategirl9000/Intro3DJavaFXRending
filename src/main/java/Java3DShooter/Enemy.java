@@ -33,19 +33,21 @@ public class Enemy extends Box {
 
     /**
      * initializes a new Enemy
-     * @throws NullPointerException if the groundPlaneBoundingBox was not set beforehand
+     * <p>
+     * Ensure that you call {@link #setGroundPlaneBoundingBox(double[][])} beforehand so the enemy's spawn coordinates can be determined
+     * @throws IllegalArgumentException if the {@link #setGroundPlaneBoundingBox(double[][])} was not called beforehand
      */
-    public Enemy() throws NullPointerException {
+    public Enemy() throws IllegalArgumentException {
         super(WIDTH, HEIGHT, DEPTH);
 
+        // Not the best practice way to do things, but it ensures we have fast creation of enemies
+        // Better than passing the groundPlane every time we create an enemy
         if (groundPlaneBoundingBox == null) {
-            throw new NullPointerException("No groundPlaneBoundingBox set");
+            throw new IllegalArgumentException("No groundPlaneBoundingBox set, call Enemy.setGroundPlaneBoundingBox(double[][]) before instantiating any Enemies");
         }
 
         PhongMaterial material = new PhongMaterial(COLOR);
         super.setMaterial(material);
-
-
     }
 
     /**
