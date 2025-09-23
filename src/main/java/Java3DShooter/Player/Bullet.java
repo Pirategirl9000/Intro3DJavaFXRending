@@ -1,4 +1,4 @@
-package org.example.Java3DShooter;
+package Java3DShooter.Player;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -43,7 +43,7 @@ public class Bullet extends Box {
     /**
      * Creates a new bullet at the set position
      */
-    public Bullet(double x, double y, double z, double xVel, double yVel, double zVel) {
+    protected Bullet(double x, double y, double z, double xVel, double yVel, double zVel) {
         // Hey that's cool, you can't reference these fields(WIDTH, HEIGHT, DEPTH) unless they are static because super precedes the object's creation
         // I guess that's why super() has to be the first call in the constructor since the parent class has to be initialized first before the child
         // I did not know that :)
@@ -62,12 +62,12 @@ public class Bullet extends Box {
      * Returns the bullet's remaining timeToLive
      * @return Frames left before death
      */
-    public int getTimeToLive() { return timeToLive; }
+    protected int getTimeToLive() { return timeToLive; }
 
     /**
      * Moves the bullet forward by one frame
      */
-    public void move() {
+    protected void move() {
         this.setTranslateX(this.getTranslateX() + velocity[0]);
         this.setTranslateY(this.getTranslateY() + velocity[1]);
         this.setTranslateZ(this.getTranslateZ() + velocity[2]);

@@ -1,4 +1,4 @@
-package org.example.Java3DShooter;
+package Java3DShooter;
 
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;

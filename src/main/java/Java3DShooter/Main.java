@@ -1,5 +1,6 @@
-package org.example.Java3DShooter;
+package Java3DShooter;
 
+import Java3DShooter.Player.Player;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.*;

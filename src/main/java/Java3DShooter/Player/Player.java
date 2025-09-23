@@ -1,4 +1,4 @@
-package org.example.Java3DShooter;
+package Java3DShooter.Player;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
