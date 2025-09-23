@@ -26,6 +26,7 @@ ___
 #
 ### The different nodes created are all held within "Group root" in the Main class which is then passed to the scene to create the environment
 ### All new nodes are to be pushed to root to allow it to be rendered on stage
+![Diagram of the Main class](resources/MainDiagram.png)
 ___
 ## Player
 ### The Player class handles parsing of controls into movement of the player and the scene camera
@@ -53,6 +54,8 @@ ___
 ### It also updates the camera's angle of tilt and the positions of all living bullets (culling any bullets whose TTL has expired)
 ### Note that the camera's yTilt angle is bounded to [-90°, 90°] to prent turning the camera all the way around
 ### This allows more realistic camera movement that isn't disorienting when the player looks too far up.
+#
+![Diagram of the Player Class](resources/PlayerDiagram.png)
 ___
 ## Bullet
 ### The Bullet class serves to carefully bundle together relevant information for a projectile
@@ -69,6 +72,9 @@ ___
 #
 ### The bullet takes in a base velocity on initialization which is then multiplied by the BULLETSPEED to create the finalized velocity vector for the bullet
 #
+![Diagram of the Bullet Class](resources/BulletDiagram.png)
 ___
 ## Enemy
+#
+[Diagram of the Enemy Class](resources/EnemyDiagram.png)
 
