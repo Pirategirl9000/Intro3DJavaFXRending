@@ -5,7 +5,7 @@ ___
 ___
 ### The camera uses trigonometry executed on the x & z axis to determine a vector of motion based on the x-tilt angle of the camera
 ### This vector of motion allows us to determine how much the camera should move along each axis allowing for movement controls to be relative to the camera's direction
-### This motion vector is defined by <x, z> = <SPEED * sin(angle), SPEED * cos(angle)>
+### This motion vector is defined by <x, z> = <SPEED * sin(xTilt.getAngle()), SPEED * cos(xTilt.getAngle())>
 ### Usually motion vectors are defined as x = cos(angle) but because we are attempting trigonometry on the x and z axis the trigonometry changes
 ### We can determine that the z-axis associates with cos since at angle=0 the camera is facing the positive z-axis so we use a trig function for the z-axis that has f(0) = 1 which turns out to be cos()
 #
