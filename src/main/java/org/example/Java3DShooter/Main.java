@@ -7,8 +7,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.stage.Stage;
 import javafx.scene.shape.Box;
 import javafx.scene.paint.Color;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
