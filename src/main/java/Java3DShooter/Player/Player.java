@@ -36,12 +36,12 @@ public class Player extends Group {
     /**
      * The maximum amount of hitpoints for the player
      */
-    private static final int MAXHP = 5;
+    private static final double MAXHP = 5;
 
     /**
      * Current hitpoints of the player
      */
-    private int HP = MAXHP;
+    private double HP = MAXHP;
 
     /**
      * Number of frames between shots. Note that AnimationTimer pulses at 60Hz so we need to multiply the cooldown by 60
