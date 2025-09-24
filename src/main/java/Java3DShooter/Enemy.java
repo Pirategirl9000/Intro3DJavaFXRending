@@ -87,7 +87,7 @@ public class Enemy extends Box {
         // Credit where it's due, this was not my original idea. I got this from AI and then prompted it several times till I (somewhat) understood the math behind it.
         // I believe AI should be used as a learning tool and not to do everything for me
         // Hopefully my comments do a good job at showing my understanding of the topic rather than blind trust in a random equation an artificial intellegence suggested
-        // That being said this is quite ingenius and I'm sad I didn't think of something like this myself, but I know myself well enough to know I couldn't do something like this without seeing it first
+        // That being said this is quite ingenius, and I'm upset I didn't think of something like this myself, but I know myself well enough to know I couldn't do something like this without seeing it first
 
         // Get the player's x and z coords
         double px = player.getTranslateX();
