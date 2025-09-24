@@ -107,8 +107,7 @@ public class Main extends Application {
             player.move(keysHeld);  // Note: this also moves all bullets by one frame
 
             // Enemy logic
-            for (int i = 0; i < enemies.size(); i++) {
-                Enemy currentEnemy = enemies.get(i);
+            for (Enemy currentEnemy : enemies) {
                 if (currentEnemy.isDead()) {
                     deadEnemies.add(currentEnemy);  // Do it this way so we don't skip over enemies during our iteration
                     continue;
