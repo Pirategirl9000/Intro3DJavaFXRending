@@ -106,6 +106,9 @@ public class Main extends Application {
             if (player.isDead()) {this.stop();}  // stops the gameLoop if the player is dead
             player.move(keysHeld);  // Note: this also moves all bullets by one frame
 
+
+
+
             // Enemy logic
             for (Enemy currentEnemy : enemies) {
                 if (currentEnemy.isDead()) {
@@ -113,7 +116,7 @@ public class Main extends Application {
                     continue;
                 }
 
-                currentEnemy.move(player.getX(), player.getY());
+                currentEnemy.move(player.getX(), player.getZ());
             }
 
             // Get rid of all dead enemies
