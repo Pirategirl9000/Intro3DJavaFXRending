@@ -8,6 +8,8 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.stage.Stage;
 import javafx.scene.shape.Box;
 import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +19,26 @@ public class Main extends Application {
      * Serves as the primary display container for the application. Anything added to root will be displayed on stage
      */
     private final Group root = new Group();
+
+    /**
+     * A group for rending the different enemies
+     */
+    private final Group enemyGroup = new Group();
+
+    /**
+     * Stores all the enemies
+     */
+    private ArrayList<Enemy> enemies = new ArrayList<>();
+
+    /**
+     * Spawn cooldown for enemies in frames
+     */
+    private static int SPAWNCOOLDOWN = 60 * 5;
+
+    /**
+     * Time left in frames before next enemy spawns
+     */
+    private int nextEnemy = SPAWNCOOLDOWN;
 
     /**
      * Scene which is being displayed by the stage. Displays what is contained in the Group 'root'
@@ -77,11 +99,38 @@ public class Main extends Application {
      * AnimationTimer that controls the game loop
      */
     private final AnimationTimer gameLoop = new AnimationTimer() {
+        private ArrayList<Enemy> deadEnemies = new ArrayList<>();
+
         public void handle(long now) {
+            // Player logic
             if (player.isDead()) {this.stop();}  // stops the gameLoop if the player is dead
-            player.move(keysHeld);
+            player.move(keysHeld);  // Note: this also moves all bullets by one frame
+
+            // Enemy logic
+            for (int i = 0; i < enemies.size(); i++) {
+                Enemy currentEnemy = enemies.get(i);
+                if (currentEnemy.isDead()) {
+                    deadEnemies.add(currentEnemy);  // Do it this way so we don't skip over enemies during our iteration
+                    continue;
+                }
+
+                currentEnemy.move(player.getX(), player.getY());
+            }
+
+            // Get rid of all dead enemies
+            enemies.removeAll(deadEnemies);
+            deadEnemies.clear();
 
 
+            // Spawns an enemy if it's cooldown is up and then adds it to the children of the enemyGroup
+            if (nextEnemy <= 0) {
+                enemies.add(new Enemy(player.getHitbox()));
+                nextEnemy = SPAWNCOOLDOWN;  // Reset the cooldown
+            }
+
+
+            enemyGroup.getChildren().setAll(enemies);  // Refresh the enemy group in case there was a dead enemy or new enemy spawned
+            nextEnemy--; // Reduce the cooldown by 1 frame
         }
     };
 
@@ -246,8 +295,9 @@ public class Main extends Application {
         // Add the objects to root
         root.getChildren().addAll(transflag);
         root.getChildren().add(ground);
-        root.getChildren().add(player);  // Player stores both the player's hitbox and all bullets
         root.getChildren().add(sun);
+        root.getChildren().add(player);  // Player stores both the player's hitbox and all bullets
+        root.getChildren().add(enemyGroup);  // Stores all enemies
         root.getChildren().add(new AmbientLight(Color.WHITE));  // Add an ambient light since I suck at pointLights and it provides even glow
 
         // Start the gameloop and display application
