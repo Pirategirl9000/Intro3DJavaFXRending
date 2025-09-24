@@ -155,7 +155,7 @@ public class Enemy extends Box {
         // Thus in a tan() x->y and z->x
         double angle = Math.atan2(dx, dz);  // In radians so we don't need to convert it later
 
-        this.setTranslateX(this.getTranslateX() + (SPEED * Math.sin(angle)));
-        this.setTranslateZ(this.getTranslateZ() + (SPEED * Math.cos(angle)));
+        this.setTranslateX(this.getTranslateX() + (-SPEED * Math.sin(angle)));
+        this.setTranslateZ(this.getTranslateZ() + (-SPEED * Math.cos(angle)));
     }
 }
