@@ -66,12 +66,12 @@ public class Player extends Group {
     /**
      * The speed at which the camera can move. Serves as a magnitude for our motion vectors
      */
-    private static final double SPEED = 0.5;
+    private static final double SPEED = 1.5;
 
     /**
      * Look speed for the camera, impacts how fast the camera will tilt
      */
-    private static final double LOOKSPEED = 0.5;
+    private static final double LOOKSPEED = 1;
 
     /**
      * Field of view of the camera
