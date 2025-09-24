@@ -45,7 +45,17 @@ public class Enemy extends Box {
     /**
      * The closest an enemy can spawn to the player
      */
-    private static int minDistanceFromPlayerOnSpawn = 500;
+    private static final int minDistanceFromPlayerOnSpawn = 500;
+
+    /**
+     * Max hitpoints for an enemy. This is their starting hp
+     */
+    private static final double MAXHP = 1;
+
+    /**
+     * Current HP of the enemy
+     */
+    private double HP = MAXHP;
 
     /**
      * initializes a new Enemy
@@ -125,11 +135,17 @@ public class Enemy extends Box {
      */
     public static void setGroundPlaneBoundingBox(double[][] boundingBox) { groundPlaneBoundingBox = boundingBox; }
 
+    public boolean isDead() { return this.HP <= 0;}
+
     /**
-     * Returns the set groundPlaneBoundingBox
-     * @return the bounding box as defined by {{xMin, xMax}, {yMin, yMax}, {zMin, zMax}}
+     * Reduces the enemy's health by the damage taken unless the enemy is already dead
+     * @param damage damage taken
      */
-    public static double[][] getGroundPlaneBoundingBox() {return groundPlaneBoundingBox;}
+    public void takeDamage(int damage) {
+        if (isDead()) {return;}  // Enemy is already dead
+        this.HP -= damage;
+    }
+
 
     public void move(double playerX, double playerZ) {
         double dx = this.getTranslateX() - playerX;
