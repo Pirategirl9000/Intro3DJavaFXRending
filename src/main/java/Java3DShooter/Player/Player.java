@@ -261,17 +261,21 @@ public class Player extends Group {
      * Updates the positions of every bullet and kills any bullets whose timeToLive is expired
      */
     private void moveBullets() {
+        ArrayList<Bullet> deadProjectiles = new ArrayList<>();
+
         for (int i = 0; i < projectiles.size(); i++) {
             Bullet bullet = projectiles.get(i);
 
-            // If the bullet's TTL is expired we remove it from our projectiles list
+            // If the bullet's TTL is expired we add it to the deadProjectiles list to remove later
             if (bullet.getTimeToLive() <= 0) {
-                projectiles.remove(bullet);
+                deadProjectiles.add(bullet);
                 continue;
             }
 
             bullet.move();
         }
+
+        projectiles.removeAll(deadProjectiles);
 
         // Reset the projectilesGroup so that it only has the currently living projectiles
         projectilesGroup.getChildren().setAll(projectiles);
